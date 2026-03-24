@@ -42,6 +42,25 @@ const DOKU_CLIENT_ID = process.env.DOKU_CLIENT_ID || "";
 const DOKU_SECRET_KEY = process.env.DOKU_SECRET_KEY || "";
 const APP_URL = (process.env.APP_URL || "http://localhost:3000").replace(/\/$/, "");
 
+// ─── Fonnte WA Notification ───────────────────────────────────
+// Daftar di https://fonnte.com → ambil TOKEN & isi nomor WA pemilik
+const FONNTE_TOKEN = process.env.FONNTE_TOKEN || "";
+const OWNER_WA     = process.env.OWNER_WA || ""; // contoh: 6281234567890
+
+async function sendWANotif(message) {
+  if (!FONNTE_TOKEN || !OWNER_WA) return; // skip jika belum dikonfigurasi
+  try {
+    await axios.post(
+      "https://api.fonnte.com/send",
+      { target: OWNER_WA, message },
+      { headers: { Authorization: FONNTE_TOKEN } }
+    );
+    console.log("📲 WA notif terkirim ke", OWNER_WA);
+  } catch (err) {
+    console.error("WA notif gagal:", err?.response?.data || err.message);
+  }
+}
+
 // ─── Product Catalog ─────────────────────────────────────────
 const PRODUCTS = {
   fnb: {
@@ -226,7 +245,7 @@ app.post("/api/create-payment", async (req, res) => {
 // DOKU akan POST ke sini setelah payment berhasil/gagal
 // Wajib whitelist URL ini di DOKU Dashboard → Settings → Notification URL
 // ─────────────────────────────────────────────────────────────
-app.post("/api/webhook", (req, res) => {
+app.post("/api/webhook", async (req, res) => {
   try {
     const notification = req.body;
     const invoiceNumber = notification?.order?.invoice_number;
@@ -239,9 +258,42 @@ app.post("/api/webhook", (req, res) => {
       orders[invoiceNumber].updatedAt = new Date().toISOString();
       orders[invoiceNumber].transactionId = notification?.transaction?.id || "";
       console.log(`✅ Order ${invoiceNumber} updated to: ${transactionStatus}`);
+
+      const order = orders[invoiceNumber];
+      const amountFmt = `Rp ${parseInt(order.amount).toLocaleString("id-ID")}`;
+      const waktu = new Date().toLocaleString("id-ID", { timeZone: "Asia/Jakarta" });
+
+      // ── Kirim notif WA ke pemilik saat SUKSES ──
+      if (transactionStatus === "SUCCESS" || transactionStatus === "PAID") {
+        const msg =
+          `🔔 *ORDER MASUK — TEMPLATEKU*\n\n` +
+          `✅ *Pembayaran Berhasil!*\n\n` +
+          `📦 Produk : ${order.productName}\n` +
+          `💰 Total   : ${amountFmt}\n` +
+          `👤 Nama    : ${order.name}\n` +
+          `📧 Email   : ${order.email}\n` +
+          `📱 WA      : ${order.phone || "-"}\n` +
+          `🆔 Order ID: ${invoiceNumber}\n` +
+          `🕐 Waktu   : ${waktu}\n\n` +
+          `Segera proses setup website customer! 🚀`;
+        await sendWANotif(msg);
+      }
+
+      // ── Notif juga jika GAGAL (opsional, bisa dihapus) ──
+      if (transactionStatus === "FAILED" || transactionStatus === "EXPIRED") {
+        const msg =
+          `⚠️ *ORDER GAGAL — TEMPLATEKU*\n\n` +
+          `Status : ${transactionStatus}\n` +
+          `Produk : ${order.productName}\n` +
+          `Nama   : ${order.name}\n` +
+          `Email  : ${order.email}\n` +
+          `Order  : ${invoiceNumber}\n` +
+          `Waktu  : ${waktu}`;
+        await sendWANotif(msg);
+      }
     }
 
-    // DOKU mengharapkan response 200 dengan body spesifik
+    // DOKU mengharapkan response 200
     return res.status(200).json({ status: "OK" });
   } catch (err) {
     console.error("Webhook error:", err.message);
