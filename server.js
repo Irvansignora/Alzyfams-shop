@@ -69,8 +69,8 @@ const PRODUCTS = {
     amount: 999000, // dalam rupiah (DOKU pakai satuan rupiah)
   },
   distributor: {
-    name: "Website Distributor Snack",
-    description: "Sistem distribusi 3-in-1: Admin, Salesman, Supplier + free setup",
+    name: "Website Distributor",
+    description: "Sistem distribusi 3-in-1: Admin, Salesman, Supplier — fleksibel untuk semua jenis distributor",
     amount: 999000,
   },
   bundle: {
