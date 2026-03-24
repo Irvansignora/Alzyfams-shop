@@ -1,6 +1,6 @@
 /**
  * ══════════════════════════════════════════════════════════
- * TEMPLATEKU — Node.js Backend with DOKU Payment Gateway
+ * ALZYFAMS SHOP — Node.js Backend with DOKU Payment Gateway
  * ══════════════════════════════════════════════════════════
  * 
  * Endpoints:
@@ -62,22 +62,54 @@ async function sendWANotif(message) {
 }
 
 // ─── Product Catalog ─────────────────────────────────────────
+// ✏️  Tambah produk baru di sini — format: key: { name, description, amount, category }
+// category options: "template" | "pos" | "saas" | "tools" | "bundle"
 const PRODUCTS = {
+
+  // ── TEMPLATE WEBSITE ──────────────────────────────────────
   fnb: {
     name: "Website UMKM F&B",
     description: "Template website premium coffee shop / restoran + free setup & deploy",
-    amount: 999000, // dalam rupiah (DOKU pakai satuan rupiah)
+    amount: 999000,
+    category: "template",
   },
   distributor: {
     name: "Website Distributor",
-    description: "Sistem distribusi 3-in-1: Admin, Salesman, Supplier — fleksibel untuk semua jenis distributor",
+    description: "Sistem distribusi 3-in-1: Admin, Salesman, Supplier — fleksibel semua jenis distributor",
     amount: 999000,
+    category: "template",
   },
-  bundle: {
+  bundle_template: {
     name: "Bundle 2 Website (F&B + Distributor)",
     description: "Kedua template + free setup, domain gratis 1 tahun, support 60 hari",
     amount: 1499000,
+    category: "bundle",
   },
+
+  // ── KASIR POS OFFLINE ─────────────────────────────────────
+  pos_basic: {
+    name: "Kasir POS Offline — Basic",
+    description: "Aplikasi kasir offline untuk toko/warung. Transaksi, stok, laporan harian. Bayar sekali.",
+    amount: 499000,
+    category: "pos",
+  },
+  pos_pro: {
+    name: "Kasir POS Offline — Pro",
+    description: "POS multi-kasir, multi-outlet, loyalty points, laporan laba/rugi + free setup.",
+    amount: 999000,
+    category: "pos",
+  },
+
+  // ── SAAS / TOOLS ──────────────────────────────────────────
+  // ✏️  Tambah produk SaaS / tools di sini
+  // contoh:
+  // inventory_saas: {
+  //   name: "Inventory Manager SaaS",
+  //   description: "Kelola stok multi-gudang berbasis cloud. Akses dari mana saja.",
+  //   amount: 299000,
+  //   category: "saas",
+  // },
+
 };
 
 // ─────────────────────────────────────────────────────────────
@@ -136,7 +168,7 @@ app.post("/api/create-payment", async (req, res) => {
   }
 
   // Generate unique order ID
-  const orderId = `TK-${Date.now()}-${Math.random().toString(36).substr(2, 6).toUpperCase()}`;
+  const orderId = `AZ-${Date.now()}-${Math.random().toString(36).substr(2, 6).toUpperCase()}`;
   const requestId = crypto.randomUUID();
   const requestTimestamp = new Date().toISOString().split(".")[0] + "Z";
   const requestTarget = "/checkout/v1/payment";
@@ -266,7 +298,7 @@ app.post("/api/webhook", async (req, res) => {
       // ── Kirim notif WA ke pemilik saat SUKSES ──
       if (transactionStatus === "SUCCESS" || transactionStatus === "PAID") {
         const msg =
-          `🔔 *ORDER MASUK — TEMPLATEKU*\n\n` +
+          `🔔 *ORDER MASUK — ALZYFAMS SHOP*\n\n` +
           `✅ *Pembayaran Berhasil!*\n\n` +
           `📦 Produk : ${order.productName}\n` +
           `💰 Total   : ${amountFmt}\n` +
@@ -282,7 +314,7 @@ app.post("/api/webhook", async (req, res) => {
       // ── Notif juga jika GAGAL (opsional, bisa dihapus) ──
       if (transactionStatus === "FAILED" || transactionStatus === "EXPIRED") {
         const msg =
-          `⚠️ *ORDER GAGAL — TEMPLATEKU*\n\n` +
+          `⚠️ *ORDER GAGAL — ALZYFAMS SHOP*\n\n` +
           `Status : ${transactionStatus}\n` +
           `Produk : ${order.productName}\n` +
           `Nama   : ${order.name}\n` +
@@ -341,7 +373,7 @@ app.get("*", (req, res) => {
 // ─── Start ───────────────────────────────────────────────────
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
-  console.log(`\n🚀 TemplateKu server running on port ${PORT}`);
+  console.log(`\n🚀 AlzyFams Shop server running on port ${PORT}`);
   console.log(`   Local:   http://localhost:${PORT}`);
   console.log(`   DOKU:    ${DOKU_ENV.toUpperCase()} mode (${DOKU_BASE_URL})`);
   console.log(`   Webhook: ${APP_URL}/api/webhook\n`);
