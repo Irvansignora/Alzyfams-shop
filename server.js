@@ -94,6 +94,13 @@ const PRODUCTS = {
     amount: 999000,
     category: "pos",
   },
+  // kasir: harga dinamis Rp 50.000/user — amount dikirim dari frontend
+  kasir: {
+    name: "Kasir POS Offline",
+    description: "Sistem kasir offline. Rp 50.000/user, bayar sekali.",
+    pricePerUser: 50000,
+    category: "pos",
+  },
 };
 
 // ─────────────────────────────────────────────────────────────
@@ -139,6 +146,18 @@ app.post("/api/create-payment", async (req, res) => {
     return res.status(400).json({ success: false, message: "Produk tidak valid." });
   }
 
+  // Kasir: harga dinamis Rp 50.000/user
+  let finalAmount = productInfo.amount;
+  let finalName   = productInfo.name;
+  if (product === "kasir") {
+    const users = parseInt(req.body.users) || 1;
+    if (users < 1 || users > 100) {
+      return res.status(400).json({ success: false, message: "Jumlah user tidak valid (1–100)." });
+    }
+    finalAmount = productInfo.pricePerUser * users;
+    finalName   = `Kasir POS Offline — ${users} User`;
+  }
+
   if (!MIDTRANS_SERVER_KEY) {
     return res.status(500).json({
       success: false,
@@ -151,14 +170,14 @@ app.post("/api/create-payment", async (req, res) => {
   const snapBody = {
     transaction_details: {
       order_id: orderId,
-      gross_amount: productInfo.amount,
+      gross_amount: finalAmount,
     },
     item_details: [
       {
         id: product,
-        price: productInfo.amount,
+        price: finalAmount,
         quantity: 1,
-        name: productInfo.name,
+        name: finalName,
         category: productInfo.category,
         merchant_name: "AlzyFams Shop",
       },
@@ -200,8 +219,8 @@ app.post("/api/create-payment", async (req, res) => {
     orders[orderId] = {
       orderId,
       product,
-      productName: productInfo.name,
-      amount: productInfo.amount,
+      productName: finalName,
+      amount: finalAmount,
       name,
       email,
       phone: phone || "",
@@ -211,7 +230,7 @@ app.post("/api/create-payment", async (req, res) => {
       redirectUrl: redirect_url,
     };
 
-    console.log(`✅ Order created: ${orderId} | ${productInfo.name} | ${name} <${email}>`);
+    console.log(`✅ Order created: ${orderId} | ${finalName} | ${name} <${email}>`);
 
     return res.json({
       success: true,
@@ -219,8 +238,8 @@ app.post("/api/create-payment", async (req, res) => {
       snapToken,
       clientKey: MIDTRANS_CLIENT_KEY,
       redirectUrl: redirect_url,
-      productName: productInfo.name,
-      amount: productInfo.amount,
+      productName: finalName,
+      amount: finalAmount,
     });
   } catch (error) {
     const errData = error?.response?.data;
