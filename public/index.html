@@ -1474,7 +1474,14 @@ function submitOrder(){
   if(!name||!email||!wa){alert('Nama, email, dan nomor WhatsApp wajib diisi!');return;}
 
   var productKey=modalProductData.product;
-  if(productKey==='kasir') productKey='pos_basic';
+  // kasir: tetap kirim sebagai 'kasir', server hitung harga per user
+  var usersEl=document.getElementById('order-users');
+  var users=(productKey==='kasir'&&usersEl&&usersEl.value!=='custom')?parseInt(usersEl.value)||1:1;
+  if(productKey==='kasir'&&usersEl&&usersEl.value==='custom'){
+    alert('Untuk jumlah user custom, silakan hubungi kami via WhatsApp ya!');
+    window.open('https://wa.me/6285776077292?text=Halo+AlzyFams!+Saya+mau+Kasir+POS+dengan+jumlah+user+custom.','_blank');
+    return;
+  }
 
   var btn=document.getElementById('btn-submit-order');
   if(btn){btn.disabled=true;btn.textContent='Memproses...';}
@@ -1486,7 +1493,8 @@ function submitOrder(){
       product: productKey,
       name: name,
       email: email,
-      phone: wa
+      phone: wa,
+      users: users
     })
   })
   .then(function(r){return r.json();})
