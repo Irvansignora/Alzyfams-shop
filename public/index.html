@@ -3,9 +3,22 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<!-- Midtrans Snap.js — sandbox: ganti URL ke https://app.midtrans.com/snap/snap.js untuk production -->
-<!-- data-client-key diisi otomatis oleh server via /api/create-payment response (clientKey) -->
-<script id="midtrans-snap" src="https://app.sandbox.midtrans.com/snap/snap.js" data-client-key=""></script>
+<!-- Midtrans Snap.js — dimuat dinamis dari /api/config agar client key sudah siap sebelum snap.pay() -->
+<script>
+(function(){
+  fetch('/api/config')
+    .then(function(r){ return r.json(); })
+    .then(function(cfg){
+      var s = document.createElement('script');
+      s.id  = 'midtrans-snap';
+      s.src = cfg.snapUrl;
+      s.setAttribute('data-client-key', cfg.clientKey);
+      s.onload = function(){ console.log('Midtrans Snap.js loaded. Client Key OK.'); };
+      document.head.appendChild(s);
+    })
+    .catch(function(e){ console.error('Gagal load Midtrans config:', e); });
+})();
+</script>
 <title>AlzyFams Shop — Produk Digital Premium untuk Bisnis Kamu</title>
 <meta name="description" content="Produk digital premium: Template Website, Kasir POS, SaaS, dan lebih. Siap pakai, bayar sekali, langsung jalan!">
 <meta name="theme-color" content="#FF5B1E">
@@ -1483,10 +1496,6 @@ function submitOrder(){
       alert('Gagal membuat pembayaran: '+(data.message||'Error tidak diketahui'));
       return;
     }
-    // Set client key ke snap.js jika belum terset
-    var snapScript=document.getElementById('midtrans-snap');
-    if(snapScript&&data.clientKey) snapScript.setAttribute('data-client-key',data.clientKey);
-
     closeModal();
     // Buka Midtrans Snap popup
     if(window.snap){
