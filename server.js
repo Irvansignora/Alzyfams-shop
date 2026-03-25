@@ -105,6 +105,20 @@ function verifyMidtransSignature({ orderId, statusCode, grossAmount, serverKey }
   return crypto.createHash("sha512").update(raw).digest("hex");
 }
 
+
+// ─────────────────────────────────────────────────────────────
+// GET /api/config — expose public config ke frontend (client key, env)
+// ─────────────────────────────────────────────────────────────
+app.get("/api/config", (req, res) => {
+  res.json({
+    clientKey: MIDTRANS_CLIENT_KEY,
+    isProduction: MIDTRANS_IS_PRODUCTION,
+    snapUrl: MIDTRANS_IS_PRODUCTION
+      ? "https://app.midtrans.com/snap/snap.js"
+      : "https://app.sandbox.midtrans.com/snap/snap.js",
+  });
+});
+
 // ─────────────────────────────────────────────────────────────
 // POST /api/create-payment
 // Body: { product, name, email, phone }
