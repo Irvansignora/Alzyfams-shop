@@ -1,0 +1,26 @@
+# IANZYA Hub — robots.txt
+# https://hub.ianzya.com/
+
+User-agent: *
+Allow: /
+Disallow: /api/
+Disallow: /success.html
+
+# Sitemap
+Sitemap: https://hub.ianzya.com/sitemap.xml
+
+# Allow AI crawlers
+User-agent: GPTBot
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: CCBot
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
