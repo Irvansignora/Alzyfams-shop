@@ -1411,6 +1411,53 @@ footer{background:var(--ink);padding:72px 60px 40px;}
   </div>
 </div>
 
+<!-- ══════════════════════════════════════════════════
+     CART OVERLAY + DRAWER
+══════════════════════════════════════════════════ -->
+<div class="cart-overlay" id="cart-overlay"></div>
+<div class="cart-drawer" id="cart-drawer">
+  <div class="cart-drawer-head">
+    <span class="cart-drawer-title">🛒 Keranjang</span>
+    <button class="cart-drawer-close" id="cart-close">×</button>
+  </div>
+  <div class="cart-tabs">
+    <button class="cart-tab active" id="tab-cart" onclick="switchCartTab('cart')">Keranjang</button>
+    <button class="cart-tab" id="tab-history" onclick="switchCartTab('history')">Riwayat Beli</button>
+  </div>
+
+  <!-- Panel Keranjang -->
+  <div class="cart-panel" id="panel-cart">
+    <div class="cart-empty" id="cart-empty-state">
+      <div class="cart-empty-icon">🛍️</div>
+      <div class="cart-empty-text">Keranjangmu masih kosong</div>
+      <div class="cart-empty-sub">Tambahkan produk untuk mulai checkout</div>
+    </div>
+    <div id="cart-items-list"></div>
+  </div>
+
+  <!-- Panel Riwayat -->
+  <div class="cart-panel" id="panel-history" style="display:none;">
+    <div class="cart-empty" id="history-empty-state">
+      <div class="cart-empty-icon">📋</div>
+      <div class="cart-empty-text">Belum ada riwayat pembelian</div>
+      <div class="cart-empty-sub">Riwayat tersimpan di perangkat ini</div>
+    </div>
+    <div id="history-items-list"></div>
+  </div>
+
+  <!-- Footer (hanya tampil di tab cart) -->
+  <div class="cart-footer" id="cart-footer">
+    <div class="cart-total-row">
+      <span class="cart-total-label">Total</span>
+      <span class="cart-total-amount" id="cart-total">Rp 0</span>
+    </div>
+    <button class="cart-checkout-btn" id="cart-checkout-btn" onclick="checkoutCart()" disabled>
+      💳 Checkout Sekarang
+    </button>
+    <button class="cart-clear-btn" id="cart-clear-btn" onclick="clearCart()">Kosongkan Keranjang</button>
+  </div>
+</div>
+
 <script>
 // ── PAGE NAVIGATION ──
 var currentPage = 'home';
@@ -1879,52 +1926,6 @@ updateBadge();
 
 </script>
 
-<!-- ══════════════════════════════════════════
-     CART OVERLAY + DRAWER
-══════════════════════════════════════════ -->
-<div class="cart-overlay" id="cart-overlay"></div>
-<div class="cart-drawer" id="cart-drawer">
-  <div class="cart-drawer-head">
-    <span class="cart-drawer-title">🛒 Keranjang</span>
-    <button class="cart-drawer-close" id="cart-close">×</button>
-  </div>
-  <div class="cart-tabs">
-    <button class="cart-tab active" id="tab-cart" onclick="switchCartTab('cart')">Keranjang</button>
-    <button class="cart-tab" id="tab-history" onclick="switchCartTab('history')">Riwayat Beli</button>
-  </div>
-
-  <!-- Panel Keranjang -->
-  <div class="cart-panel" id="panel-cart">
-    <div class="cart-empty" id="cart-empty-state">
-      <div class="cart-empty-icon">🛍️</div>
-      <div class="cart-empty-text">Keranjangmu masih kosong</div>
-      <div class="cart-empty-sub">Tambahkan produk untuk mulai checkout</div>
-    </div>
-    <div id="cart-items-list"></div>
-  </div>
-
-  <!-- Panel Riwayat -->
-  <div class="cart-panel" id="panel-history" style="display:none;">
-    <div class="cart-empty" id="history-empty-state">
-      <div class="cart-empty-icon">📋</div>
-      <div class="cart-empty-text">Belum ada riwayat pembelian</div>
-      <div class="cart-empty-sub">Riwayat tersimpan di perangkat ini</div>
-    </div>
-    <div id="history-items-list"></div>
-  </div>
-
-  <!-- Footer (hanya tampil di tab cart) -->
-  <div class="cart-footer" id="cart-footer">
-    <div class="cart-total-row">
-      <span class="cart-total-label">Total</span>
-      <span class="cart-total-amount" id="cart-total">Rp 0</span>
-    </div>
-    <button class="cart-checkout-btn" id="cart-checkout-btn" onclick="checkoutCart()" disabled>
-      💳 Checkout Sekarang
-    </button>
-    <button class="cart-clear-btn" id="cart-clear-btn" onclick="clearCart()">Kosongkan Keranjang</button>
-  </div>
-</div>
 
 </body>
 </html>
