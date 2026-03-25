@@ -1,0 +1,1526 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- Midtrans Snap.js — sandbox: ganti URL ke https://app.midtrans.com/snap/snap.js untuk production -->
+<!-- data-client-key diisi otomatis oleh server via /api/create-payment response (clientKey) -->
+<script id="midtrans-snap" src="https://app.sandbox.midtrans.com/snap/snap.js" data-client-key=""></script>
+<title>AlzyFams Shop — Produk Digital Premium untuk Bisnis Kamu</title>
+<meta name="description" content="Produk digital premium: Template Website, Kasir POS, SaaS, dan lebih. Siap pakai, bayar sekali, langsung jalan!">
+<meta name="theme-color" content="#FF5B1E">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect width='64' height='64' rx='14' fill='%231A1408'/><circle cx='32' cy='32' r='22' fill='none' stroke='%23F2B705' stroke-width='1.5' stroke-dasharray='2.5 2'/><circle cx='32' cy='32' r='17' fill='%23F2B705'/><text x='32' y='33' text-anchor='middle' dominant-baseline='central' font-family='Georgia,serif' font-weight='700' font-size='13' fill='%231A1408'>AF</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=DM+Serif+Display:ital@0;1&family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --cream:#F5F0E4;--sky:#C8E6F5;--ink:#1A1408;
+  --orange:#FF5B1E;--gold:#F2B705;--teal:#00A896;
+  --rose:#E84F6B;--lime:#8CC63F;--purple:#6B3FA0;--sand:#E8D5A3;
+}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{background:var(--cream);color:var(--ink);font-family:'Space Grotesk',sans-serif;overflow-x:hidden;cursor:none;}
+::selection{background:var(--gold);color:var(--ink);}
+::-webkit-scrollbar{width:4px;}
+::-webkit-scrollbar-thumb{background:var(--orange);border-radius:2px;}
+
+/* CURSOR */
+.cursor{position:fixed;width:14px;height:14px;border-radius:50%;background:var(--orange);pointer-events:none;z-index:9999;transform:translate(-50%,-50%);transition:width .2s,height .2s,background .2s;mix-blend-mode:multiply;}
+.cursor.big{width:50px;height:50px;background:var(--gold);}
+
+/* PROGRESS BAR */
+#progress-bar{position:fixed;top:0;left:0;z-index:9999;height:3px;width:0%;background:linear-gradient(90deg,var(--orange),var(--gold),var(--teal));transition:width .1s linear;pointer-events:none;}
+
+/* BACK TO TOP */
+#back-top{position:fixed;bottom:88px;right:28px;z-index:400;width:44px;height:44px;border-radius:50%;background:var(--ink);color:var(--cream);border:2.5px solid var(--ink);font-size:18px;font-weight:700;display:flex;align-items:center;justify-content:center;cursor:pointer;text-decoration:none;box-shadow:3px 3px 0 rgba(26,20,8,.25);transition:all .25s;opacity:0;transform:translateY(10px);pointer-events:none;}
+#back-top.show{opacity:1;transform:translateY(0);pointer-events:all;}
+#back-top:hover{background:var(--orange);border-color:var(--orange);transform:translate(-2px,-2px);}
+
+/* ── NAV ── */
+nav{position:fixed;top:0;left:0;right:0;z-index:500;padding:0 60px;height:72px;display:flex;align-items:center;justify-content:space-between;gap:40px;mix-blend-mode:multiply;transition:background .3s,box-shadow .3s,border .3s,backdrop-filter .3s;}
+.nav-logo{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--ink);}
+.nav-logo-icon-box{width:34px;height:34px;border-radius:8px;background:var(--orange);color:#fff;font-family:'Anton',sans-serif;font-size:13px;letter-spacing:1px;display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:2px 2px 0 var(--ink);transition:transform .2s,box-shadow .2s;}
+.nav-logo:hover .nav-logo-icon-box{transform:translate(-2px,-2px);box-shadow:4px 4px 0 var(--ink);}
+.nav-logo-text{font-family:'Anton',sans-serif;font-size:22px;letter-spacing:2px;text-transform:uppercase;}
+.nav-logo-text span{color:var(--orange);}
+.nav-hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:6px;background:none;border:none;}
+.nav-hamburger span{display:block;width:24px;height:2.5px;background:var(--ink);border-radius:2px;transition:all .3s;}
+.nav-hamburger.open span:nth-child(1){transform:rotate(45deg) translate(5px,5px);}
+.nav-hamburger.open span:nth-child(2){opacity:0;}
+.nav-hamburger.open span:nth-child(3){transform:rotate(-45deg) translate(5px,-5px);}
+.nav-mobile-menu{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:var(--cream);z-index:490;flex-direction:column;align-items:center;justify-content:center;gap:40px;opacity:0;transition:opacity .3s;pointer-events:none;}
+.nav-mobile-menu.open{opacity:1;pointer-events:all;}
+.nav-mobile-menu a{font-family:'Anton',sans-serif;font-size:40px;letter-spacing:2px;text-transform:uppercase;color:var(--ink);text-decoration:none;transition:color .2s;}
+.nav-mobile-menu a:hover,.nav-mobile-menu a.active{color:var(--orange);}
+.nav-links{display:flex;gap:32px;list-style:none;flex:1;justify-content:center;}
+.nav-links a{font-size:13px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;text-decoration:none;color:var(--ink);transition:color .2s;white-space:nowrap;padding-bottom:3px;border-bottom:2px solid transparent;}
+.nav-links a:hover,.nav-links a.active{color:var(--orange);border-bottom-color:var(--orange);}
+.nav-cta{background:var(--ink);color:var(--cream);padding:11px 26px;font-size:13px;font-weight:700;letter-spacing:1px;text-transform:uppercase;text-decoration:none;border-radius:2px;transition:background .2s,transform .2s;white-space:nowrap;flex-shrink:0;cursor:pointer;border:none;}
+.nav-cta:hover{background:var(--orange);transform:translateY(-2px);}
+@media(max-width:1100px){.nav-links{display:none;}.nav-hamburger{display:flex;}.nav-mobile-menu{display:flex;}}
+@media(max-width:600px){nav{padding:0 24px;}}
+
+/* ── PAGES ── */
+.page{display:none;}
+.page.active{display:block;}
+
+/* ── MARQUEE ── */
+.marquee-strip{overflow:hidden;white-space:nowrap;border-top:3px solid var(--ink);border-bottom:3px solid var(--ink);padding:16px 0;}
+.marquee-strip.orange{background:var(--orange);border-color:var(--orange);}
+.marquee-strip.gold{background:var(--gold);border-color:var(--gold);}
+.marquee-strip.teal{background:var(--teal);border-color:var(--teal);}
+.marquee-strip.purple{background:var(--purple);border-color:var(--purple);}
+.mq{display:inline-flex;animation:mq-left 20s linear infinite;}
+.mq-rev{animation-direction:reverse;animation-duration:25s;}
+.mq-item{display:inline-flex;align-items:center;gap:20px;padding:0 32px;font-family:'Anton',sans-serif;font-size:22px;letter-spacing:2px;text-transform:uppercase;}
+.marquee-strip .mq-item{color:var(--ink);}
+.marquee-strip.orange .mq-item{color:#fff;}
+.marquee-strip.gold .mq-item{color:var(--ink);}
+.marquee-strip.teal .mq-item,.marquee-strip.purple .mq-item{color:#fff;}
+.mq-sep{font-size:14px;opacity:.5;}
+@keyframes mq-left{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+
+/* ── STATS STRIP ── */
+#stats-strip{padding:0 60px;border-top:3px solid var(--ink);border-bottom:3px solid var(--ink);display:grid;grid-template-columns:repeat(4,1fr);background:var(--ink);}
+.stat-block{padding:36px 40px;border-right:1px solid rgba(255,255,255,.08);display:flex;flex-direction:column;gap:8px;opacity:0;transform:translateY(20px);transition:opacity .7s ease,transform .7s ease,background .3s;}
+.stat-block:last-child{border-right:none;}
+.stat-block.vis{opacity:1;transform:translateY(0);}
+.stat-block:hover{background:rgba(255,91,30,.08);}
+.stat-n{font-family:'Anton',sans-serif;font-size:56px;color:var(--gold);line-height:1;letter-spacing:-1px;}
+.stat-l{font-family:'Space Mono',monospace;font-size:10px;color:rgba(255,255,255,.4);letter-spacing:2.5px;text-transform:uppercase;}
+@media(max-width:800px){#stats-strip{grid-template-columns:repeat(2,1fr);padding:0 20px;}.stat-block{padding:24px 20px;}.stat-n{font-size:40px;}}
+
+/* ── PROOF STRIP ── */
+.proof-strip{background:var(--sand);border-top:3px solid var(--ink);border-bottom:3px solid var(--ink);padding:20px 60px;display:flex;align-items:center;justify-content:center;gap:48px;flex-wrap:wrap;}
+.proof-item{display:flex;align-items:center;gap:10px;font-size:13px;font-weight:700;color:var(--ink);}
+.proof-ico{font-size:20px;}
+
+/* ── HERO ── */
+#hero{min-height:100vh;background:linear-gradient(180deg,#C8E6F5 0%,#E8F4FB 35%,#F5F0E4 100%);position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center;padding-top:72px;}
+.cloud{position:absolute;pointer-events:none;background:#fff;border-radius:50px;opacity:.75;filter:blur(1px);}
+.cloud::before,.cloud::after{content:'';position:absolute;background:#fff;border-radius:50%;}
+.c1{width:180px;height:50px;top:12%;left:5%;animation:drift 18s ease-in-out infinite;}
+.c1::before{width:80px;height:80px;top:-40px;left:20px;}
+.c1::after{width:60px;height:60px;top:-30px;left:70px;}
+.c2{width:240px;height:60px;top:8%;right:10%;animation:drift 24s ease-in-out infinite reverse;}
+.c2::before{width:100px;height:100px;top:-50px;left:30px;}
+.c2::after{width:70px;height:70px;top:-35px;left:100px;}
+.c3{width:140px;height:40px;top:20%;left:35%;animation:drift 20s ease-in-out infinite 4s;}
+.c3::before{width:60px;height:60px;top:-30px;left:15px;}
+.c3::after{width:50px;height:50px;top:-25px;left:60px;}
+@keyframes drift{0%,100%{transform:translateX(0)}50%{transform:translateX(20px)}}
+.hill{position:absolute;bottom:0;border-radius:50%;pointer-events:none;}
+.hill1{width:900px;height:300px;background:linear-gradient(180deg,#8CC63F,#6B9B2A);bottom:-60px;left:-100px;}
+.hill2{width:700px;height:250px;background:linear-gradient(180deg,#A5D65A,#8CC63F);bottom:-40px;right:-50px;}
+.hill3{width:500px;height:180px;background:linear-gradient(180deg,#C3E88D,#A5D65A);bottom:-20px;left:30%;}
+.float-obj{position:absolute;pointer-events:none;will-change:transform;z-index:5;}
+.obj-coffee{font-size:120px;top:15%;right:12%;animation:floatY 5s ease-in-out infinite;filter:drop-shadow(0 20px 30px rgba(0,0,0,.15));}
+.obj-box{font-size:100px;top:20%;left:8%;animation:floatY 7s ease-in-out infinite 1s;filter:drop-shadow(0 20px 30px rgba(0,0,0,.12));}
+.obj-star{font-size:60px;top:55%;right:6%;animation:spin-float 8s ease-in-out infinite;color:var(--gold);}
+.obj-arrow{font-size:80px;bottom:30%;left:6%;animation:floatY 6s ease-in-out infinite 2s;color:var(--orange);}
+.obj-diamond{width:60px;height:60px;background:var(--rose);top:40%;right:4%;transform:rotate(45deg);animation:floatY 4s ease-in-out infinite .5s;border-radius:6px;box-shadow:0 12px 32px rgba(232,79,107,.3);}
+.obj-circle{width:80px;height:80px;border-radius:50%;background:var(--gold);bottom:25%;left:3%;animation:floatY 9s ease-in-out infinite 3s;box-shadow:0 12px 32px rgba(242,183,5,.35);}
+.obj-pill{width:120px;height:44px;border-radius:100px;background:var(--teal);bottom:8%;left:38%;animation:floatY 6s ease-in-out infinite 1.5s;box-shadow:0 10px 28px rgba(0,168,150,.3);}
+@keyframes floatY{0%,100%{transform:translateY(0px);}50%{transform:translateY(-20px);}}
+@keyframes spin-float{0%,100%{transform:translateY(0) rotate(0deg);}50%{transform:translateY(-15px) rotate(180deg);}}
+.hero-inner{position:relative;z-index:20;text-align:center;padding:0 40px;max-width:1100px;}
+.hero-tag{display:inline-flex;align-items:center;gap:10px;background:var(--ink);color:var(--cream);padding:8px 20px;border-radius:100px;font-size:12px;font-weight:700;letter-spacing:2px;text-transform:uppercase;margin-bottom:28px;}
+.hero-tag-dot{width:7px;height:7px;border-radius:50%;background:var(--gold);animation:blink 1.5s ease infinite;}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.2}}
+.hero-h1{font-family:'Anton',sans-serif;font-size:clamp(80px,12vw,180px);line-height:.9;letter-spacing:-2px;text-transform:uppercase;margin-bottom:0;position:relative;z-index:10;}
+.hero-h1 .line1,.hero-h1 .line3{display:block;color:transparent;-webkit-text-stroke:3px var(--ink);}
+.hero-h1 .line2{color:var(--orange);font-family:'DM Serif Display',serif;font-style:italic;font-size:clamp(70px,10vw,160px);letter-spacing:-1px;text-transform:none;display:block;position:relative;z-index:11;text-shadow:4px 4px 0 rgba(255,91,30,.18);}
+.hero-sub{font-size:18px;color:rgba(26,20,8,.55);line-height:1.7;max-width:520px;margin:32px auto 48px;font-weight:400;}
+.hero-sub strong{color:var(--ink);font-weight:700;}
+.hero-btns{display:flex;gap:18px;justify-content:center;flex-wrap:wrap;}
+.btn-big{display:inline-flex;align-items:center;gap:10px;padding:18px 44px;border-radius:100px;font-size:16px;font-weight:700;letter-spacing:.5px;text-decoration:none;transition:all .25s;position:relative;overflow:hidden;white-space:nowrap;cursor:pointer;border:none;}
+.btn-fill{background:var(--ink);color:var(--cream);}
+.btn-fill:hover{background:var(--orange);transform:translateY(-3px);box-shadow:0 12px 32px rgba(255,91,30,.35);}
+.btn-outline-big{background:transparent;color:var(--ink);border:2.5px solid var(--ink);}
+.btn-outline-big:hover{background:var(--ink);color:var(--cream);transform:translateY(-3px);}
+.sticker{position:absolute;z-index:20;width:110px;height:110px;background:var(--gold);border-radius:50%;display:flex;align-items:center;justify-content:center;text-align:center;font-family:'Anton',sans-serif;font-size:13px;letter-spacing:1.5px;text-transform:uppercase;color:var(--ink);line-height:1.3;box-shadow:0 8px 24px rgba(0,0,0,.15);animation:rotate-sticker 12s linear infinite;cursor:pointer;transition:transform .3s;}
+.sticker:hover{animation-play-state:paused;transform:scale(1.1);}
+@keyframes rotate-sticker{0%{transform:rotate(0)}100%{transform:rotate(360deg)}}
+.sticker-inner{animation:rotate-sticker 12s linear infinite reverse;padding:14px;}
+.sticker1{bottom:28%;right:14%;}
+.sticker2{top:22%;left:2%;width:90px;height:90px;background:var(--rose);color:#fff;font-size:11px;}
+
+/* ── STATEMENT ── */
+#statement{padding:120px 60px;background:var(--ink);position:relative;overflow:hidden;}
+.statement-deco{position:absolute;right:-100px;top:50%;transform:translateY(-50%);font-size:500px;opacity:.04;font-family:'Anton',sans-serif;color:#fff;letter-spacing:-20px;pointer-events:none;white-space:nowrap;}
+.statement-inner{max-width:900px;}
+.statement-label{font-family:'Space Mono',monospace;font-size:11px;color:var(--gold);letter-spacing:4px;text-transform:uppercase;margin-bottom:32px;display:flex;align-items:center;gap:14px;}
+.statement-label::before{content:'';width:32px;height:1px;background:var(--gold);}
+.statement-text{font-family:'DM Serif Display',serif;font-size:clamp(40px,5.5vw,72px);color:#fff;line-height:1.1;letter-spacing:-1.5px;}
+.statement-text em{font-style:italic;color:var(--gold);}
+.statement-text .accent{color:var(--teal);}
+
+/* ── WHY ── */
+#why{background:var(--ink);padding:100px 60px;border-bottom:3px solid var(--ink);}
+.why-header{text-align:center;margin-bottom:72px;}
+.why-h-label{font-family:'Space Mono',monospace;font-size:11px;color:var(--gold);letter-spacing:4px;text-transform:uppercase;margin-bottom:20px;}
+.why-h-title{font-family:'Anton',sans-serif;font-size:clamp(52px,7vw,96px);color:#fff;text-transform:uppercase;letter-spacing:-2px;line-height:.9;}
+.why-h-title em{font-family:'DM Serif Display',serif;font-style:italic;color:var(--gold);text-transform:none;font-size:clamp(48px,6.5vw,88px);}
+.why-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:0;border:1px solid rgba(255,255,255,.1);}
+.why-card{padding:52px 40px;border-right:1px solid rgba(255,255,255,.1);position:relative;overflow:hidden;cursor:default;transition:background .3s;}
+.why-card:last-child{border-right:none;}
+.why-card:hover{background:rgba(242,183,5,.04);}
+.why-card-bar{position:absolute;top:0;left:0;right:0;height:3px;transform:scaleX(0);transform-origin:left;transition:transform .4s ease;}
+.why-card:hover .why-card-bar{transform:scaleX(1);}
+.wcb1{background:var(--gold);}.wcb2{background:var(--teal);}.wcb3{background:var(--rose);}
+.why-card-n{font-family:'Anton',sans-serif;font-size:72px;color:rgba(255,255,255,.05);margin-bottom:8px;line-height:1;}
+.why-card-ico{font-size:40px;display:block;margin-bottom:20px;}
+.why-card-title{font-family:'Anton',sans-serif;font-size:26px;text-transform:uppercase;color:#fff;margin-bottom:14px;letter-spacing:.5px;line-height:1.1;}
+.why-card-desc{font-size:14px;color:rgba(255,255,255,.45);line-height:1.75;}
+@media(max-width:768px){.why-grid{grid-template-columns:1fr;}.why-card{border-right:none;border-bottom:1px solid rgba(255,255,255,.1);}#why{padding:60px 24px;}}
+
+/* ── PAYMENT ── */
+#payment{background:var(--cream);padding:80px 60px;border-bottom:3px solid var(--ink);}
+.payment-header{text-align:center;margin-bottom:52px;}
+.payment-label{font-family:'Space Mono',monospace;font-size:11px;color:var(--teal);letter-spacing:3px;text-transform:uppercase;margin-bottom:14px;}
+.payment-title{font-family:'Anton',sans-serif;font-size:clamp(44px,5vw,72px);text-transform:uppercase;letter-spacing:-1px;line-height:.92;}
+.payment-title em{font-family:'DM Serif Display',serif;font-style:italic;color:var(--teal);text-transform:none;}
+.payment-methods{display:flex;justify-content:center;gap:20px;flex-wrap:wrap;}
+.pm-item{background:#fff;border:2.5px solid var(--ink);border-radius:12px;padding:20px 30px;display:flex;flex-direction:column;align-items:center;gap:8px;transition:all .25s;cursor:default;}
+.pm-item:hover{transform:translateY(-4px);box-shadow:4px 4px 0 var(--ink);background:var(--sand);}
+.pm-ico{font-size:32px;}
+.pm-name{font-size:12px;font-weight:800;letter-spacing:.5px;text-transform:uppercase;}
+.pm-desc{font-size:11px;color:rgba(26,20,8,.4);}
+
+/* ── HOW TO ORDER ── */
+#how-to-order{padding:100px 60px;background:var(--cream);}
+.hto-header{text-align:center;margin-bottom:72px;}
+.hto-label{font-family:'Space Mono',monospace;font-size:11px;color:var(--orange);letter-spacing:3px;text-transform:uppercase;margin-bottom:16px;}
+.hto-title{font-family:'Anton',sans-serif;font-size:clamp(52px,7vw,96px);text-transform:uppercase;letter-spacing:-2px;line-height:.9;}
+.hto-title em{font-family:'DM Serif Display',serif;font-style:italic;color:var(--orange);text-transform:none;}
+.hto-steps{display:grid;grid-template-columns:repeat(4,1fr);gap:0;border:3px solid var(--ink);}
+.hto-step{padding:48px 32px;border-right:3px solid var(--ink);position:relative;}
+.hto-step:last-child{border-right:none;}
+.hto-step-num{position:absolute;top:20px;right:20px;font-family:'Anton',sans-serif;font-size:64px;color:rgba(26,20,8,.05);line-height:1;}
+.hto-step-ico{font-size:48px;display:block;margin-bottom:24px;}
+.hto-step-title{font-family:'Anton',sans-serif;font-size:22px;text-transform:uppercase;margin-bottom:14px;letter-spacing:.5px;}
+.hto-step-desc{font-size:13.5px;color:rgba(26,20,8,.55);line-height:1.7;}
+@media(max-width:900px){.hto-steps{grid-template-columns:1fr 1fr;}.hto-step:nth-child(2){border-right:none;}.hto-step{border-bottom:3px solid var(--ink);}#how-to-order{padding:60px 24px;}}
+@media(max-width:500px){.hto-steps{grid-template-columns:1fr;}.hto-step{border-right:none;}}
+
+/* ── PRICING ── */
+#pricing{padding:100px 60px;background:var(--cream);}
+.pricing-header{margin-bottom:64px;}
+.pricing-h-top{display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:0;}
+.pricing-h-label{font-family:'Space Mono',monospace;font-size:11px;color:var(--orange);letter-spacing:3px;text-transform:uppercase;display:block;margin-bottom:16px;}
+.pricing-h-title{font-family:'Anton',sans-serif;font-size:clamp(52px,7vw,96px);text-transform:uppercase;letter-spacing:-2px;line-height:.92;color:var(--ink);}
+.pricing-h-title em{font-family:'DM Serif Display',serif;font-style:italic;color:var(--orange);text-transform:none;font-size:clamp(46px,6.5vw,86px);}
+.pricing-h-sub{max-width:320px;font-size:14px;color:rgba(26,20,8,.5);line-height:1.7;padding-bottom:8px;}
+.pricing-grid{display:grid;grid-template-columns:repeat(4,1fr);border:3px solid var(--ink);}
+.price-col{padding:40px 28px;border-right:3px solid var(--ink);position:relative;overflow:hidden;transition:background .3s;}
+.price-col:last-child{border-right:none;}
+.price-col.hot{background:var(--ink);color:#fff;}
+.price-col:not(.hot):hover{background:rgba(255,91,30,.03);}
+.price-col.hot::before{content:'';position:absolute;top:0;left:0;right:0;height:4px;background:linear-gradient(90deg,var(--gold),var(--teal),var(--orange),var(--rose),var(--gold));background-size:300% 100%;animation:gradient-slide 3s linear infinite;}
+@keyframes gradient-slide{0%{background-position:0%}100%{background-position:300%}}
+.pc-eyebrow{font-family:'Space Mono',monospace;font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;padding:5px 13px;border-radius:100px;border:2px solid;display:inline-block;margin-bottom:24px;}
+.pce-o{border-color:var(--orange);color:var(--orange);}
+.pce-t{border-color:var(--teal);color:var(--teal);}
+.pce-p{border-color:var(--purple);color:var(--purple);}
+.pce-hot{border-color:var(--gold);color:var(--gold);background:rgba(242,183,5,.1);}
+.pc-name{font-family:'Anton',sans-serif;font-size:24px;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;}
+.price-col.hot .pc-name{color:#fff;}
+.pc-desc{font-size:13px;color:rgba(26,20,8,.5);line-height:1.6;margin-bottom:28px;}
+.price-col.hot .pc-desc{color:rgba(255,255,255,.45);}
+.pc-price{font-family:'Anton',sans-serif;font-size:48px;color:var(--ink);letter-spacing:-2px;line-height:1;margin-bottom:4px;}
+.price-col.hot .pc-price{color:var(--gold);}
+.pc-old{font-size:16px;text-decoration:line-through;color:rgba(26,20,8,.25);margin-left:8px;vertical-align:middle;}
+.price-col.hot .pc-old{color:rgba(255,255,255,.2);}
+.pc-note{font-size:12px;color:rgba(26,20,8,.4);margin-bottom:28px;font-weight:600;}
+.price-col.hot .pc-note{color:rgba(255,255,255,.35);}
+.pc-ul{list-style:none;display:flex;flex-direction:column;gap:11px;margin-bottom:32px;}
+.pc-ul li{display:flex;align-items:flex-start;gap:9px;font-size:13px;color:rgba(26,20,8,.7);}
+.price-col.hot .pc-ul li{color:rgba(255,255,255,.65);}
+.pc-ul li::before{content:'→';font-weight:700;flex-shrink:0;font-size:11px;margin-top:2px;}
+.pc-ul li.o::before{color:var(--orange);}
+.pc-ul li.t::before{color:var(--teal);}
+.pc-ul li.p::before{color:var(--purple);}
+.pc-ul li.h::before{color:var(--gold);}
+.pc-cta{display:block;text-align:center;padding:14px;border-radius:100px;font-size:14px;font-weight:700;text-decoration:none;letter-spacing:.3px;transition:all .25s;position:relative;overflow:hidden;cursor:pointer;border:none;}
+.cta-orange{background:var(--orange);color:#fff;box-shadow:0 6px 20px rgba(255,91,30,.3);}
+.cta-orange:hover{transform:translateY(-2px);box-shadow:0 12px 32px rgba(255,91,30,.5);}
+.cta-teal{background:var(--teal);color:#fff;box-shadow:0 6px 20px rgba(0,168,150,.3);}
+.cta-teal:hover{transform:translateY(-2px);box-shadow:0 12px 32px rgba(0,168,150,.5);}
+.cta-purple{background:var(--purple);color:#fff;box-shadow:0 6px 20px rgba(107,63,160,.3);}
+.cta-purple:hover{transform:translateY(-2px);box-shadow:0 12px 32px rgba(107,63,160,.5);}
+.cta-gold{background:linear-gradient(135deg,var(--gold),#FFD700);color:var(--ink);box-shadow:0 6px 20px rgba(242,183,5,.4);}
+.cta-gold:hover{transform:translateY(-2px);}
+.price-note{text-align:center;margin-top:28px;font-size:13px;color:rgba(26,20,8,.4);font-weight:600;}
+@media(max-width:900px){.pricing-grid{grid-template-columns:1fr 1fr;}.price-col{border-bottom:3px solid var(--ink);}#pricing{padding:60px 24px;}}
+@media(max-width:500px){.pricing-grid{grid-template-columns:1fr;}}
+
+/* ── TESTIMONIALS ── */
+#testimonials{padding:100px 60px;background:var(--ink);position:relative;overflow:hidden;}
+.testi-bg-text{position:absolute;bottom:-60px;left:-40px;font-family:'Anton',sans-serif;font-size:300px;opacity:.03;color:#fff;letter-spacing:-10px;pointer-events:none;white-space:nowrap;}
+.testi-header{text-align:center;margin-bottom:64px;}
+.testi-h-title{font-family:'Anton',sans-serif;font-size:clamp(52px,7vw,96px);color:#fff;text-transform:uppercase;letter-spacing:-2px;line-height:.9;}
+.testi-h-title em{font-family:'DM Serif Display',serif;font-style:italic;color:var(--gold);text-transform:none;}
+.testi-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;}
+.testi-card{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);border-radius:2px;padding:36px;position:relative;transition:background .3s;opacity:0;transform:translateY(20px);transition:opacity .7s ease,transform .7s ease,background .3s;}
+.testi-card.vis{opacity:1;transform:translateY(0);}
+.testi-card:hover{background:rgba(255,255,255,.08);}
+.testi-strip{position:absolute;top:0;left:0;right:0;height:3px;}
+.ts1{background:var(--gold);}.ts2{background:var(--teal);}.ts3{background:var(--rose);}
+.ts4{background:var(--lime);}.ts5{background:var(--orange);}.ts6{background:var(--purple);}
+.testi-stars{color:var(--gold);font-size:18px;margin-bottom:16px;}
+.testi-q{font-size:14px;color:rgba(255,255,255,.7);line-height:1.75;margin-bottom:28px;font-style:italic;}
+.testi-author{display:flex;align-items:center;gap:14px;}
+.testi-av{width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Anton',sans-serif;font-size:18px;color:#fff;flex-shrink:0;}
+.tav-o{background:var(--orange);}.tav-t{background:var(--teal);}.tav-r{background:var(--rose);}
+.testi-name{font-size:13px;font-weight:700;color:#fff;}
+.testi-role{font-size:11px;color:rgba(255,255,255,.4);margin-top:2px;}
+@media(max-width:768px){.testi-grid{grid-template-columns:1fr;}#testimonials{padding:60px 24px;}}
+
+/* ── FAQ ── */
+#faq{background:var(--cream);padding:100px 60px;}
+.faq-inner{max-width:800px;margin:0 auto;}
+.faq-header{margin-bottom:60px;}
+.faq-h-title{font-family:'Anton',sans-serif;font-size:clamp(52px,7vw,96px);text-transform:uppercase;letter-spacing:-2px;line-height:.9;}
+.faq-h-title em{font-family:'DM Serif Display',serif;font-style:italic;color:var(--orange);text-transform:none;}
+.faq-item{border-bottom:2px solid rgba(26,20,8,.1);overflow:hidden;}
+.faq-q{padding:22px 0;display:flex;justify-content:space-between;align-items:center;font-size:16px;font-weight:700;cursor:pointer;gap:20px;transition:color .2s;}
+.faq-q:hover{color:var(--orange);}
+.faq-icon{font-size:24px;font-weight:400;transition:transform .3s;flex-shrink:0;}
+.faq-item.open .faq-icon{transform:rotate(45deg);}
+.faq-a{font-size:14px;color:rgba(26,20,8,.6);line-height:1.75;max-height:0;overflow:hidden;transition:max-height .4s ease,padding .3s;}
+.faq-item.open .faq-a{max-height:200px;padding-bottom:20px;}
+@media(max-width:600px){#faq{padding:60px 24px;}}
+
+/* ── CTA FINALE ── */
+#cta{background:var(--orange);padding:120px 60px;position:relative;overflow:hidden;}
+.cta-bg-text{position:absolute;right:-80px;top:50%;transform:translateY(-50%);font-family:'Anton',sans-serif;font-size:400px;opacity:.07;color:#fff;letter-spacing:-15px;pointer-events:none;}
+.cta-inner{position:relative;z-index:5;max-width:700px;}
+.cta-emoji{font-size:60px;display:block;margin-bottom:24px;}
+.cta-title{font-family:'Anton',sans-serif;font-size:clamp(64px,9vw,128px);text-transform:uppercase;letter-spacing:-3px;line-height:.85;color:#fff;margin-bottom:24px;}
+.cta-title em{font-family:'DM Serif Display',serif;font-style:italic;color:var(--gold);}
+.cta-sub{font-size:17px;color:rgba(255,255,255,.8);line-height:1.7;max-width:480px;margin-bottom:48px;}
+.cta-btns{display:flex;gap:16px;flex-wrap:wrap;}
+.btn-wa-big{display:inline-flex;align-items:center;gap:10px;padding:18px 44px;border-radius:100px;font-size:16px;font-weight:700;background:#fff;color:var(--orange);cursor:pointer;border:none;transition:all .25s;}
+.btn-wa-big:hover{background:var(--gold);color:var(--ink);transform:translateY(-3px);}
+.btn-demo-big{display:inline-flex;align-items:center;gap:10px;padding:18px 44px;border-radius:100px;font-size:16px;font-weight:700;background:transparent;color:#fff;border:2.5px solid rgba(255,255,255,.5);text-decoration:none;transition:all .25s;}
+.btn-demo-big:hover{border-color:#fff;background:rgba(255,255,255,.15);}
+@media(max-width:600px){#cta{padding:60px 24px;}.cta-btns{flex-direction:column;}}
+
+/* ── FOOTER ── */
+footer{background:var(--ink);padding:72px 60px 40px;}
+.footer-inner{max-width:1200px;margin:0 auto;}
+.footer-top{display:grid;grid-template-columns:2fr 1fr;gap:80px;margin-bottom:48px;}
+.f-logo{font-family:'Anton',sans-serif;font-size:36px;color:#fff;letter-spacing:2px;text-transform:uppercase;margin-bottom:16px;}
+.f-logo span{color:var(--orange);}
+.f-tagline{font-size:14px;color:rgba(255,255,255,.4);line-height:1.7;max-width:360px;}
+.f-links{display:grid;grid-template-columns:repeat(3,1fr);gap:40px;}
+.f-col h4{font-family:'Space Mono',monospace;font-size:10px;color:var(--gold);letter-spacing:3px;text-transform:uppercase;margin-bottom:20px;}
+.f-col a{display:block;font-size:13px;color:rgba(255,255,255,.5);text-decoration:none;margin-bottom:12px;transition:color .2s;}
+.f-col a:hover{color:#fff;}
+.f-div{height:1px;background:rgba(255,255,255,.08);margin-bottom:28px;}
+.f-copy{font-size:11px;color:rgba(255,255,255,.2);letter-spacing:2px;text-transform:uppercase;}
+@media(max-width:800px){.footer-top{grid-template-columns:1fr;gap:40px;}.f-links{grid-template-columns:repeat(2,1fr);}footer{padding:48px 24px 28px;}}
+
+/* ── SCROLL REVEAL ── */
+.rv{opacity:0;transform:translateY(28px);transition:opacity .8s ease,transform .8s ease;}
+.rv.vis{opacity:1;transform:translateY(0);}
+.rv-l{opacity:0;transform:translateX(-28px);transition:opacity .8s ease,transform .8s ease;}
+.rv-l.vis{opacity:1;transform:translateX(0);}
+.rv-r{opacity:0;transform:translateX(28px);transition:opacity .8s ease,transform .8s ease;}
+.rv-r.vis{opacity:1;transform:translateX(0);}
+.d1{transition-delay:.1s;}.d2{transition-delay:.2s;}.d3{transition-delay:.3s;}.d4{transition-delay:.4s;}
+
+/* ── MODAL ── */
+.modal-overlay{position:fixed;inset:0;background:rgba(26,20,8,.85);z-index:1000;display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;pointer-events:none;transition:opacity .3s;}
+.modal-overlay.open{opacity:1;pointer-events:all;}
+.modal-box{background:var(--cream);width:100%;max-width:520px;border-radius:4px;padding:48px;border:3px solid var(--ink);position:relative;transform:translateY(30px);transition:transform .3s;max-height:90vh;overflow-y:auto;}
+.modal-overlay.open .modal-box{transform:translateY(0);}
+.modal-close{position:absolute;top:20px;right:20px;width:36px;height:36px;border-radius:50%;background:var(--ink);color:var(--cream);border:none;font-size:20px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .2s;}
+.modal-close:hover{background:var(--orange);}
+.modal-title{font-family:'Anton',sans-serif;font-size:32px;text-transform:uppercase;letter-spacing:-1px;margin-bottom:8px;}
+.modal-sub{font-size:13px;color:rgba(26,20,8,.5);margin-bottom:28px;}
+.form-group{margin-bottom:18px;}
+.form-label{display:block;font-size:12px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;margin-bottom:8px;}
+.form-input,.form-select{width:100%;padding:13px 16px;border:2px solid var(--ink);background:#fff;font-size:14px;font-family:'Space Grotesk',sans-serif;border-radius:2px;transition:border-color .2s;outline:none;}
+.form-input:focus,.form-select:focus{border-color:var(--orange);}
+.form-submit{width:100%;padding:16px;background:var(--orange);color:#fff;border:none;border-radius:100px;font-size:15px;font-weight:700;letter-spacing:.5px;cursor:pointer;transition:all .25s;margin-top:8px;}
+.form-submit:hover{background:var(--ink);transform:translateY(-2px);}
+.modal-product-badge{display:inline-flex;align-items:center;gap:8px;background:var(--ink);color:var(--cream);padding:6px 16px;border-radius:100px;font-size:12px;font-weight:700;letter-spacing:1px;text-transform:uppercase;margin-bottom:24px;}
+
+/* ─── PAGE: PRODUK ─── */
+.page-hero{padding:140px 60px 80px;background:var(--ink);position:relative;overflow:hidden;border-bottom:3px solid var(--ink);}
+.page-hero-deco{position:absolute;right:-80px;top:50%;transform:translateY(-50%);font-family:'Anton',sans-serif;font-size:400px;opacity:.04;color:#fff;pointer-events:none;}
+.page-hero-label{font-family:'Space Mono',monospace;font-size:11px;color:var(--gold);letter-spacing:4px;text-transform:uppercase;margin-bottom:20px;}
+.page-hero-title{font-family:'Anton',sans-serif;font-size:clamp(64px,10vw,140px);text-transform:uppercase;letter-spacing:-3px;line-height:.88;color:#fff;margin-bottom:24px;}
+.page-hero-title em{font-family:'DM Serif Display',serif;font-style:italic;color:var(--gold);text-transform:none;}
+.page-hero-sub{font-size:16px;color:rgba(255,255,255,.55);max-width:520px;line-height:1.75;}
+@media(max-width:600px){.page-hero{padding:120px 24px 60px;}}
+
+/* ── TEMPLATES ── */
+#templates{padding:0;background:var(--cream);}
+.template-block{display:grid;grid-template-columns:1fr 1fr;min-height:88vh;border-bottom:3px solid var(--ink);}
+.template-block:first-child{border-top:3px solid var(--ink);}
+.tb-visual{position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center;border-right:3px solid var(--ink);min-height:500px;}
+.tb-visual.coffee-vis{background:linear-gradient(160deg,#FFF5E8 0%,#FFE0C0 60%,#FFD088 100%);}
+.tb-visual.dist-vis{background:linear-gradient(160deg,#E8FBF8 0%,#B8F0EA 60%,#80E8DC 100%);}
+.tb-visual.kasir-vis{background:linear-gradient(160deg,#F0E8FF 0%,#D8C0FF 60%,#B896FF 100%);}
+.tb-num{position:absolute;top:32px;left:32px;font-family:'Anton',sans-serif;font-size:80px;opacity:.08;color:var(--ink);line-height:1;}
+.tb-screen{width:82%;background:#fff;border-radius:14px;box-shadow:0 32px 80px rgba(0,0,0,.15),0 8px 24px rgba(0,0,0,.08);border:2px solid rgba(0,0,0,.08);overflow:hidden;transform:perspective(1000px) rotateY(-4deg) rotateX(2deg);transition:transform .5s ease;position:relative;z-index:2;}
+.template-block:hover .tb-screen{transform:perspective(1000px) rotateY(0deg) rotateX(0deg);}
+.tb-screen-bar{padding:9px 14px;background:#F0EBE0;border-bottom:1.5px solid rgba(0,0,0,.07);display:flex;align-items:center;gap:6px;}
+.tbd{width:8px;height:8px;border-radius:50%;}
+.tbd-r{background:#FF5F57}.tbd-y{background:#FEBC2E}.tbd-g{background:#28C840}
+.tb-addr{flex:1;height:12px;background:rgba(0,0,0,.07);border-radius:3px;margin-left:6px;}
+.tb-screen-iframe{position:relative;display:block;width:280%;height:280%;max-height:none;border:none;pointer-events:none;transform:scale(.357);transform-origin:top left;}
+.tb-iframe-wrap{width:100%;height:280px;overflow:hidden;background:#FFF8F0;position:relative;}
+.tb-iframe-wrap.teal-bg{background:#F0FDFB;}
+.tb-iframe-wrap.purple-bg{background:#F5F0FF;}
+.tb-obj{position:absolute;font-size:56px;filter:drop-shadow(0 12px 20px rgba(0,0,0,.12));animation:floatY 5s ease-in-out infinite;pointer-events:none;}
+.tb-obj-1{bottom:12%;right:4%;animation-delay:.5s;}
+.tb-obj-2{top:12%;right:2%;font-size:40px;animation-delay:1.5s;}
+.tb-content{padding:80px 68px;display:flex;flex-direction:column;justify-content:center;}
+.tb-tag{display:inline-flex;align-items:center;gap:8px;font-family:'Space Mono',monospace;font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;padding:6px 16px;border-radius:100px;border:2px solid;margin-bottom:28px;width:fit-content;}
+.tb-tag.orange{border-color:var(--orange);color:var(--orange);background:rgba(255,91,30,.06);}
+.tb-tag.teal{border-color:var(--teal);color:var(--teal);background:rgba(0,168,150,.06);}
+.tb-tag.purple{border-color:var(--purple);color:var(--purple);background:rgba(107,63,160,.06);}
+.tb-tag.new-badge::after{content:'NEW';background:var(--rose);color:#fff;font-size:9px;padding:2px 7px;border-radius:100px;margin-left:6px;}
+.tb-title{font-family:'Anton',sans-serif;font-size:clamp(44px,5vw,68px);text-transform:uppercase;letter-spacing:-1px;line-height:.92;margin-bottom:20px;color:var(--ink);}
+.tb-title .italic-line{font-family:'DM Serif Display',serif;font-style:italic;text-transform:none;display:block;font-size:clamp(36px,4vw,58px);}
+.tb-italic-orange{color:var(--orange);}
+.tb-italic-teal{color:var(--teal);}
+.tb-italic-purple{color:var(--purple);}
+.tb-desc{font-size:15px;color:rgba(26,20,8,.55);line-height:1.75;margin-bottom:32px;max-width:420px;}
+.tb-desc strong{color:var(--ink);font-weight:700;}
+.tb-pills{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:36px;}
+.tb-pill{font-size:12px;font-weight:700;padding:7px 15px;border-radius:100px;border:2px solid var(--ink);background:transparent;color:var(--ink);transition:all .2s;cursor:default;}
+.tb-pill:hover{background:var(--ink);color:var(--cream);}
+.tb-pill.o:hover{background:var(--orange);border-color:var(--orange);color:#fff;}
+.tb-pill.t:hover{background:var(--teal);border-color:var(--teal);color:#fff;}
+.tb-pill.p:hover{background:var(--purple);border-color:var(--purple);color:#fff;}
+.tb-footer{display:flex;align-items:center;gap:20px;padding-top:32px;border-top:2px dashed rgba(26,20,8,.15);}
+.tb-price{font-family:'Anton',sans-serif;font-size:44px;color:var(--ink);letter-spacing:-1px;}
+.tb-price-badge{font-size:11px;font-weight:800;background:var(--orange);color:#fff;padding:4px 12px;border-radius:100px;margin-left:8px;vertical-align:middle;letter-spacing:.5px;}
+.tb-price-sub{font-size:12px;color:rgba(26,20,8,.4);font-weight:600;margin-top:4px;}
+.btn-demo-link{display:inline-flex;align-items:center;gap:7px;font-size:13px;font-weight:700;letter-spacing:.5px;text-decoration:none;color:rgba(26,20,8,.4);border-bottom:2px solid rgba(26,20,8,.2);padding-bottom:2px;transition:all .2s;}
+.btn-demo-link:hover{color:var(--ink);border-color:var(--ink);}
+.btn-order-now{display:inline-flex;align-items:center;gap:8px;padding:14px 30px;border-radius:100px;font-size:14px;font-weight:700;letter-spacing:.3px;text-decoration:none;transition:all .25s;margin-left:auto;cursor:pointer;border:none;position:relative;overflow:hidden;}
+.btn-on-orange{background:var(--orange);color:#fff;box-shadow:0 6px 20px rgba(255,91,30,.3);}
+.btn-on-orange:hover{transform:translateY(-2px);box-shadow:0 12px 32px rgba(255,91,30,.45);}
+.btn-on-teal{background:var(--teal);color:#fff;box-shadow:0 6px 20px rgba(0,168,150,.3);}
+.btn-on-teal:hover{transform:translateY(-2px);box-shadow:0 12px 32px rgba(0,168,150,.45);}
+.btn-on-purple{background:var(--purple);color:#fff;box-shadow:0 6px 20px rgba(107,63,160,.3);}
+.btn-on-purple:hover{transform:translateY(-2px);box-shadow:0 12px 32px rgba(107,63,160,.45);}
+@media(max-width:900px){.template-block{grid-template-columns:1fr;min-height:auto;}.tb-visual{min-height:300px;border-right:none;border-bottom:3px solid var(--ink);}.tb-content{padding:40px 24px;}.tb-content[style*="order:1"]{order:2!important;}.tb-visual[style*="order:2"]{order:1!important;}}
+
+/* ── PAGE HERO BREADCRUMB ── */
+.page-breadcrumb{display:flex;align-items:center;gap:8px;font-size:12px;color:rgba(255,255,255,.4);margin-bottom:20px;font-family:'Space Mono',monospace;letter-spacing:1px;}
+.page-breadcrumb a{color:rgba(255,255,255,.4);text-decoration:none;transition:color .2s;}
+.page-breadcrumb a:hover{color:var(--gold);}
+.page-breadcrumb span{color:var(--gold);}
+
+/* WA FLOAT */
+.wa-float{position:fixed;bottom:28px;right:28px;z-index:400;width:56px;height:56px;border-radius:50%;background:#25D366;color:#fff;font-size:28px;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 20px rgba(37,211,102,.4);text-decoration:none;transition:all .25s;}
+.wa-float:hover{transform:scale(1.1);box-shadow:0 8px 32px rgba(37,211,102,.6);}
+
+/* KASIR DEMO SECTION */
+.kasir-demo-section{background:var(--ink);padding:60px;border-top:3px solid rgba(255,255,255,.1);}
+.kasir-demo-inner{max-width:900px;margin:0 auto;text-align:center;}
+.kasir-demo-label{font-family:'Space Mono',monospace;font-size:11px;color:var(--purple);letter-spacing:4px;text-transform:uppercase;margin-bottom:16px;}
+.kasir-demo-title{font-family:'Anton',sans-serif;font-size:clamp(32px,4vw,48px);color:#fff;text-transform:uppercase;letter-spacing:-1px;margin-bottom:16px;}
+.kasir-demo-desc{font-size:15px;color:rgba(255,255,255,.5);margin-bottom:32px;}
+.kasir-demo-frame{background:#fff;border-radius:12px;overflow:hidden;border:3px solid rgba(255,255,255,.15);box-shadow:0 40px 80px rgba(0,0,0,.4);}
+.kasir-demo-bar{padding:10px 16px;background:#F0EBE0;display:flex;align-items:center;gap:6px;border-bottom:2px solid rgba(0,0,0,.08);}
+.kasir-demo-url{flex:1;background:rgba(0,0,0,.06);border-radius:4px;padding:5px 12px;font-size:11px;font-family:'Space Mono',monospace;color:rgba(26,20,8,.5);margin-left:8px;}
+.kasir-demo-iframe{width:100%;height:600px;border:none;display:block;}
+@media(max-width:600px){.kasir-demo-section{padding:40px 20px;}.kasir-demo-iframe{height:400px;}}
+
+/* PRICING PAGE SUBTITLE */
+.pricing-page-note{background:var(--sand);border:3px solid var(--ink);padding:20px 32px;margin-top:32px;font-size:14px;color:rgba(26,20,8,.6);line-height:1.7;border-radius:2px;}
+.pricing-page-note strong{color:var(--ink);}
+</style>
+</head>
+<body>
+<div class="cursor" id="cursor"></div>
+<div id="progress-bar"></div>
+
+<!-- ── NAVIGATION ── -->
+<nav id="nav">
+  <a class="nav-logo" href="#" onclick="showPage('home');return false;">
+    <div class="nav-logo-icon-box">AF</div>
+    <span class="nav-logo-text">Alzy<span>Fams</span></span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="#" id="nav-home" class="active" onclick="showPage('home');return false;">Beranda</a></li>
+    <li><a href="#" id="nav-produk" onclick="showPage('produk');return false;">Produk</a></li>
+    <li><a href="#" id="nav-harga" onclick="showPage('harga');return false;">Harga</a></li>
+    <li><a href="#" id="nav-tentang" onclick="showPage('tentang');return false;">Tentang</a></li>
+    <li><a href="#" id="nav-kontak" onclick="showPage('kontak');return false;">Kontak</a></li>
+  </ul>
+  <button class="nav-cta open-modal" data-product="general" data-name="Produk AlzyFams" data-price="Mulai 50k/User">Pesan Sekarang</button>
+  <button class="nav-hamburger" id="hamburger" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<!-- Mobile Menu -->
+<div class="nav-mobile-menu" id="mobile-menu">
+  <a href="#" onclick="showPage('home');closeMobileMenu();return false;">Beranda</a>
+  <a href="#" onclick="showPage('produk');closeMobileMenu();return false;">Produk</a>
+  <a href="#" onclick="showPage('harga');closeMobileMenu();return false;">Harga</a>
+  <a href="#" onclick="showPage('tentang');closeMobileMenu();return false;">Tentang</a>
+  <a href="#" onclick="showPage('kontak');closeMobileMenu();return false;">Kontak</a>
+</div>
+
+<!-- ═══════════════════════════════════════
+     PAGE: BERANDA
+═══════════════════════════════════════ -->
+<div class="page active" id="page-home">
+
+  <section id="hero">
+    <div class="cloud c1"></div><div class="cloud c2"></div><div class="cloud c3"></div>
+    <div class="hill hill1"></div><div class="hill hill2"></div><div class="hill hill3"></div>
+    <div class="float-obj obj-coffee">☕</div>
+    <div class="float-obj obj-box">📦</div>
+    <div class="float-obj obj-star">✦</div>
+    <div class="float-obj obj-arrow">↗</div>
+    <div class="float-obj obj-diamond"></div>
+    <div class="float-obj obj-circle"></div>
+    <div class="float-obj obj-pill"></div>
+    <div class="sticker sticker1" onclick="showPage('produk')">
+      <div class="sticker-inner">3 PRODUK SIAP PAKAI</div>
+    </div>
+    <div class="sticker sticker2" onclick="showPage('produk')">
+      <div class="sticker-inner">FREE SETUP & DEPLOY</div>
+    </div>
+    <div class="hero-inner">
+      <div class="hero-tag"><span class="hero-tag-dot"></span>Produk Digital Premium</div>
+      <h1 class="hero-h1">
+        <span class="line1">PRODUK</span>
+        <span class="line2">Digital</span>
+        <span class="line3">PREMIUM 🔥</span>
+      </h1>
+      <p class="hero-sub">Template website, <strong>Kasir POS</strong>, <strong>SaaS</strong>, dan produk digital lainnya.<br>Bayar sekali — langsung pakai. Tinggal cuan!</p>
+      <div class="hero-btns">
+        <button class="btn-big btn-fill" onclick="showPage('produk')">Lihat Semua Produk →</button>
+        <a href="https://irvansignora.github.io/Kasir-Offline/" target="_blank" class="btn-big btn-outline-big">Demo Kasir POS ↗</a>
+      </div>
+    </div>
+  </section>
+
+  <div id="stats-strip">
+    <div class="stat-block rv"><div class="stat-n"><span class="counter" data-target="3" data-suffix="">0</span></div><div class="stat-l">Produk Digital</div></div>
+    <div class="stat-block rv d1"><div class="stat-n">Free</div><div class="stat-l">Setup & Deploy</div></div>
+    <div class="stat-block rv d2"><div class="stat-n"><span class="counter" data-target="100" data-suffix="%">0%</span></div><div class="stat-l">Siap Pakai</div></div>
+    <div class="stat-block rv d3"><div class="stat-n">24/7</div><div class="stat-l">Support WhatsApp</div></div>
+  </div>
+
+  <div class="proof-strip">
+    <div class="proof-item"><span class="proof-ico">⭐</span> Dipercaya 100+ Pelanggan</div>
+    <div class="proof-item"><span class="proof-ico">🚀</span> Produk siap pakai instan</div>
+    <div class="proof-item"><span class="proof-ico">💳</span> Bayar via Midtrans · GoPay · OVO · ShopeePay · QRIS</div>
+    <div class="proof-item"><span class="proof-ico">🔄</span> Free update selamanya</div>
+  </div>
+
+  <div class="marquee-strip orange">
+    <div class="mq">
+      <span class="mq-item">Produk Digital Premium <span class="mq-sep">✦</span></span>
+      <span class="mq-item">Free Setup & Deploy <span class="mq-sep">✦</span></span>
+      <span class="mq-item">Kasir POS Offline <span class="mq-sep">✦</span></span>
+      <span class="mq-item">Loyalty Points <span class="mq-sep">✦</span></span>
+      <span class="mq-item">Multi Cabang <span class="mq-sep">✦</span></span>
+      <span class="mq-item">Panel Salesman <span class="mq-sep">✦</span></span>
+      <span class="mq-item">Laporan Laba Rugi <span class="mq-sep">✦</span></span>
+      <span class="mq-item">Support WA 24/7 <span class="mq-sep">✦</span></span>
+      <span class="mq-item">Website Siap Pakai <span class="mq-sep">✦</span></span>
+      <span class="mq-item">Free Setup & Deploy <span class="mq-sep">✦</span></span>
+      <span class="mq-item">Kasir POS Offline <span class="mq-sep">✦</span></span>
+      <span class="mq-item">Loyalty Points <span class="mq-sep">✦</span></span>
+      <span class="mq-item">Multi Cabang <span class="mq-sep">✦</span></span>
+      <span class="mq-item">Panel Salesman <span class="mq-sep">✦</span></span>
+      <span class="mq-item">Laporan Laba Rugi <span class="mq-sep">✦</span></span>
+      <span class="mq-item">Support WA 24/7 <span class="mq-sep">✦</span></span>
+    </div>
+  </div>
+
+  <section id="statement">
+    <div class="statement-deco">AlzyFams</div>
+    <div class="statement-inner">
+      <div class="statement-label">Tentang Kami</div>
+      <div class="statement-text rv">
+        Kami bikin produk digital<br>
+        yang <em>beneran menjual</em> —<br>
+        bukan sekadar <span class="accent">terlihat keren.</span><br>
+        Banyak pilihan, langsung jalan.
+      </div>
+    </div>
+  </section>
+
+  <div class="marquee-strip gold">
+    <div class="mq mq-rev">
+      <span class="mq-item">Rp 50.000/User <span class="mq-sep">·</span></span>
+      <span class="mq-item">Free Update <span class="mq-sep">·</span></span>
+      <span class="mq-item">Kasir POS Offline <span class="mq-sep">·</span></span>
+      <span class="mq-item">Dashboard Admin <span class="mq-sep">·</span></span>
+      <span class="mq-item">Multi Gudang <span class="mq-sep">·</span></span>
+      <span class="mq-item">Absensi GPS <span class="mq-sep">·</span></span>
+      <span class="mq-item">Rp 50.000/User <span class="mq-sep">·</span></span>
+      <span class="mq-item">Free Update <span class="mq-sep">·</span></span>
+      <span class="mq-item">Kasir POS Offline <span class="mq-sep">·</span></span>
+      <span class="mq-item">Dashboard Admin <span class="mq-sep">·</span></span>
+      <span class="mq-item">Multi Gudang <span class="mq-sep">·</span></span>
+      <span class="mq-item">Absensi GPS <span class="mq-sep">·</span></span>
+    </div>
+  </div>
+
+  <!-- Featured products teaser on home -->
+  <section style="padding:100px 60px;background:var(--cream);">
+    <div style="text-align:center;margin-bottom:64px;" class="rv">
+      <div style="font-family:'Space Mono',monospace;font-size:11px;color:var(--orange);letter-spacing:3px;text-transform:uppercase;margin-bottom:16px;">Produk Unggulan</div>
+      <h2 style="font-family:'Anton',sans-serif;font-size:clamp(48px,6vw,80px);text-transform:uppercase;letter-spacing:-2px;line-height:.9;">TIGA PRODUK<br><em style="font-family:'DM Serif Display',serif;font-style:italic;color:var(--orange);text-transform:none;">Siap Pakai.</em></h2>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:0;border:3px solid var(--ink);" class="prod-cards-home">
+      <div class="rv d1" style="padding:48px 40px;border-right:3px solid var(--ink);cursor:pointer;transition:background .3s;" onclick="showPage('produk')" onmouseenter="this.style.background='rgba(255,91,30,.04)'" onmouseleave="this.style.background=''">
+        <div style="font-size:64px;margin-bottom:24px;">☕</div>
+        <div style="font-family:'Space Mono',monospace;font-size:10px;color:var(--orange);letter-spacing:2px;text-transform:uppercase;margin-bottom:12px;">Template F&B</div>
+        <h3 style="font-family:'Anton',sans-serif;font-size:28px;text-transform:uppercase;margin-bottom:12px;letter-spacing:.5px;">Website UMKM Kuliner</h3>
+        <p style="font-size:13px;color:rgba(26,20,8,.5);line-height:1.7;margin-bottom:24px;">Coffee shop, kafe, restoran, bakery, cloud kitchen — semua bisnis kuliner.</p>
+        <div style="font-family:'Anton',sans-serif;font-size:32px;color:var(--orange);">Rp 999k</div>
+        <div style="font-size:11px;color:rgba(26,20,8,.4);margin-bottom:20px;">Bayar sekali · Free setup</div>
+        <span style="font-size:13px;font-weight:700;color:var(--orange);border-bottom:2px solid var(--orange);">Lihat Detail →</span>
+      </div>
+      <div class="rv d2" style="padding:48px 40px;border-right:3px solid var(--ink);cursor:pointer;transition:background .3s;" onclick="showPage('produk')" onmouseenter="this.style.background='rgba(0,168,150,.04)'" onmouseleave="this.style.background=''">
+        <div style="font-size:64px;margin-bottom:24px;">📦</div>
+        <div style="font-family:'Space Mono',monospace;font-size:10px;color:var(--teal);letter-spacing:2px;text-transform:uppercase;margin-bottom:12px;">Template Distributor</div>
+        <h3 style="font-family:'Anton',sans-serif;font-size:28px;text-transform:uppercase;margin-bottom:12px;letter-spacing:.5px;">Sistem Distribusi 3-in-1</h3>
+        <p style="font-size:13px;color:rgba(26,20,8,.5);line-height:1.7;margin-bottom:24px;">Panel Admin, Salesman mobile, dan portal Supplier — terintegrasi penuh.</p>
+        <div style="font-family:'Anton',sans-serif;font-size:32px;color:var(--teal);">Rp 999k</div>
+        <div style="font-size:11px;color:rgba(26,20,8,.4);margin-bottom:20px;">Bayar sekali · Free setup</div>
+        <span style="font-size:13px;font-weight:700;color:var(--teal);border-bottom:2px solid var(--teal);">Lihat Detail →</span>
+      </div>
+      <div class="rv d3" style="padding:48px 40px;cursor:pointer;background:var(--ink);transition:background .3s;position:relative;" onclick="showPage('produk')">
+        <div style="position:absolute;top:20px;right:20px;background:var(--rose);color:#fff;font-size:10px;font-weight:800;padding:4px 12px;border-radius:100px;letter-spacing:1px;">NEW ✨</div>
+        <div style="font-size:64px;margin-bottom:24px;">🖥️</div>
+        <div style="font-family:'Space Mono',monospace;font-size:10px;color:var(--purple);letter-spacing:2px;text-transform:uppercase;margin-bottom:12px;">Kasir POS</div>
+        <h3 style="font-family:'Anton',sans-serif;font-size:28px;text-transform:uppercase;margin-bottom:12px;letter-spacing:.5px;color:#fff;">Kasir Offline POS</h3>
+        <p style="font-size:13px;color:rgba(255,255,255,.45);line-height:1.7;margin-bottom:24px;">Sistem kasir offline lengkap. Multi-user, manajemen produk, riwayat transaksi.</p>
+        <div style="font-family:'Anton',sans-serif;font-size:32px;color:var(--gold);">Rp 50k<span style="font-size:16px;color:rgba(255,255,255,.4);font-family:'Space Grotesk',sans-serif;font-weight:600;">/User</span></div>
+        <div style="font-size:11px;color:rgba(255,255,255,.3);margin-bottom:20px;">Per pengguna · Akses selamanya</div>
+        <span style="font-size:13px;font-weight:700;color:var(--gold);border-bottom:2px solid var(--gold);">Lihat Detail →</span>
+      </div>
+    </div>
+    <style>.prod-cards-home{} @media(max-width:768px){.prod-cards-home{grid-template-columns:1fr!important;} .prod-cards-home>div{border-right:none!important;border-bottom:3px solid var(--ink);}}</style>
+    <div style="text-align:center;margin-top:40px;">
+      <button class="btn-big btn-fill" onclick="showPage('produk')">Lihat Semua Produk & Demo →</button>
+    </div>
+  </section>
+
+  <section id="why">
+    <div class="why-header">
+      <div class="why-h-label">Kenapa AlzyFams?</div>
+      <h2 class="why-h-title">KENAPA<br><em>Pilih Kami?</em></h2>
+    </div>
+    <div class="why-grid">
+      <div class="why-card rv d1">
+        <div class="why-card-bar wcb1"></div>
+        <div class="why-card-n">01</div>
+        <span class="why-card-ico">⚡</span>
+        <h3 class="why-card-title">Langsung Jalan</h3>
+        <p class="why-card-desc">Semua produk siap pakai. Tidak ada konfigurasi rumit, tidak ada perlu tahu coding. Beli, setup, langsung cuan dalam 24 jam.</p>
+      </div>
+      <div class="why-card rv d2">
+        <div class="why-card-bar wcb2"></div>
+        <div class="why-card-n">02</div>
+        <span class="why-card-ico">🛡️</span>
+        <h3 class="why-card-title">Bayar Sekali</h3>
+        <p class="why-card-desc">Tidak ada subscription bulanan dari kami. Template dan Kasir POS — bayar sekali, pakai selamanya. Free update untuk selamanya.</p>
+      </div>
+      <div class="why-card rv d3">
+        <div class="why-card-bar wcb3"></div>
+        <div class="why-card-n">03</div>
+        <span class="why-card-ico">💬</span>
+        <h3 class="why-card-title">Support Real</h3>
+        <p class="why-card-desc">Bukan hanya bot atau FAQ. Tim nyata via WhatsApp yang respon cepat. Support 30–60 hari penuh setelah pembelian.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="testimonials">
+    <div class="testi-bg-text">DIGITAL</div>
+    <div class="testi-header rv"><h2 class="testi-h-title">DIPERCAYA<br><em>Ribuan Pebisnis.</em></h2></div>
+    <div class="testi-grid">
+      <div class="testi-card rv d1"><div class="testi-strip ts1"></div><div class="testi-stars">★★★★★</div><p class="testi-q">"WA jam 9 pagi, jam 3 sore website udah live! Orderan naik 2x lipat dibanding jualan via Instagram. Worth it banget!"</p><div class="testi-author"><div class="testi-av tav-o">R</div><div><div class="testi-name">Rizky Pratama</div><div class="testi-role">Rizo Coffee, Bandung</div></div></div></div>
+      <div class="testi-card rv d2"><div class="testi-strip ts2"></div><div class="testi-stars">★★★★★</div><p class="testi-q">"Kasir POS-nya simple banget! Karyawan langsung bisa pakai tanpa training lama. Data transaksi rapi, laporan otomatis."</p><div class="testi-author"><div class="testi-av tav-t">B</div><div><div class="testi-name">Budi Santoso</div><div class="testi-role">Warung Makan Budi, Surabaya</div></div></div></div>
+      <div class="testi-card rv d3"><div class="testi-strip ts3"></div><div class="testi-stars">★★★★★</div><p class="testi-q">"POS kasir-nya bikin saya wow! Transaksi dari tablet, masuk laporan otomatis. Rekap bulanan jadi gampang banget!"</p><div class="testi-author"><div class="testi-av tav-r">S</div><div><div class="testi-name">Sari Dewi</div><div class="testi-role">Geprek Sari, Jakarta</div></div></div></div>
+    </div>
+  </section>
+
+  <section id="cta">
+    <div class="cta-bg-text">ALZY</div>
+    <div class="cta-inner rv">
+      <span class="cta-emoji">🚀</span>
+      <h2 class="cta-title">MULAI<br>BISNIS<br><em>Hari Ini.</em></h2>
+      <p class="cta-sub">Bergabung bersama ratusan pelanggan yang sudah menikmati produk digital premium kami!</p>
+      <div class="cta-btns">
+        <button class="btn-wa-big open-modal" data-product="general" data-name="Produk AlzyFams" data-price="Mulai 50k/User">🛒 Pesan Sekarang</button>
+        <button class="btn-demo-big" onclick="showPage('produk')">Lihat Semua Produk →</button>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="footer-inner">
+      <div class="footer-top">
+        <div>
+          <div class="f-logo">Alzy<span>Fams</span></div>
+          <p class="f-tagline">Produk digital premium untuk bisnis kamu — template website, kasir POS, SaaS, dan tools siap pakai.</p>
+        </div>
+        <div class="f-links">
+          <div class="f-col"><h4>Produk</h4><a href="#" onclick="showPage('produk');return false;">Website F&B</a><a href="#" onclick="showPage('produk');return false;">Website Distributor</a><a href="#" onclick="showPage('produk');return false;">Kasir POS</a></div>
+          <div class="f-col"><h4>Demo</h4><a href="https://demo-coffee-shop-v2.vercel.app/" target="_blank">Demo F&B ↗</a><a href="https://distributor-snack.vercel.app/" target="_blank">Demo Distributor ↗</a><a href="https://irvansignora.github.io/Kasir-Offline/" target="_blank">Demo Kasir ↗</a></div>
+          <div class="f-col"><h4>Kontak</h4><a href="https://wa.me/6285776077292" target="_blank">WhatsApp ↗</a><a href="#" onclick="showPage('kontak');return false;">Kontak Kami</a></div>
+        </div>
+      </div>
+      <div class="f-div"></div>
+      <p class="f-copy">© 2025 ALZYFAMS SHOP · DIBUAT DENGAN ❤️ UNTUK BISNIS INDONESIA</p>
+    </div>
+  </footer>
+</div>
+
+<!-- ═══════════════════════════════════════
+     PAGE: PRODUK
+═══════════════════════════════════════ -->
+<div class="page" id="page-produk">
+
+  <div class="page-hero">
+    <div class="page-hero-deco">PRODUK</div>
+    <div style="position:relative;z-index:5;">
+      <div class="page-breadcrumb"><a href="#" onclick="showPage('home');return false;">Beranda</a> / <span>Produk</span></div>
+      <div class="page-hero-label">Semua Produk Digital</div>
+      <h1 class="page-hero-title">PILIH<br><em>Produkmu.</em></h1>
+      <p class="page-hero-sub">3 produk digital premium siap pakai — template website lengkap & kasir POS offline. Bayar sekali, langsung jalan!</p>
+    </div>
+  </div>
+
+  <div class="marquee-strip teal">
+    <div class="mq">
+      <span class="mq-item">Website F&B <span class="mq-sep">✦</span></span>
+      <span class="mq-item">Website Distributor <span class="mq-sep">✦</span></span>
+      <span class="mq-item">Kasir POS Offline <span class="mq-sep">✦</span></span>
+      <span class="mq-item">Free Setup & Deploy <span class="mq-sep">✦</span></span>
+      <span class="mq-item">Bayar Sekali <span class="mq-sep">✦</span></span>
+      <span class="mq-item">Support WA 24/7 <span class="mq-sep">✦</span></span>
+      <span class="mq-item">Website F&B <span class="mq-sep">✦</span></span>
+      <span class="mq-item">Website Distributor <span class="mq-sep">✦</span></span>
+      <span class="mq-item">Kasir POS Offline <span class="mq-sep">✦</span></span>
+      <span class="mq-item">Free Setup & Deploy <span class="mq-sep">✦</span></span>
+      <span class="mq-item">Bayar Sekali <span class="mq-sep">✦</span></span>
+      <span class="mq-item">Support WA 24/7 <span class="mq-sep">✦</span></span>
+    </div>
+  </div>
+
+  <section id="templates">
+
+    <!-- F&B BLOCK -->
+    <div class="template-block">
+      <div class="tb-visual coffee-vis">
+        <div class="tb-num">01</div>
+        <span class="tb-obj tb-obj-1">☕</span>
+        <span class="tb-obj tb-obj-2">🍰</span>
+        <div class="tb-screen">
+          <div class="tb-screen-bar">
+            <div class="tbd tbd-r"></div><div class="tbd tbd-y"></div><div class="tbd tbd-g"></div>
+            <div class="tb-addr"></div>
+          </div>
+          <div class="tb-iframe-wrap">
+            <iframe class="tb-screen-iframe" src="https://demo-coffee-shop-v2.vercel.app/" title="Demo F&B" sandbox="allow-scripts allow-same-origin" loading="lazy"></iframe>
+          </div>
+        </div>
+      </div>
+      <div class="tb-content rv-l">
+        <span class="tb-tag orange">☕ Template F&B</span>
+        <h2 class="tb-title">WEBSITE<br>UMKM<span class="italic-line tb-italic-orange">Kuliner</span></h2>
+        <p class="tb-desc">Untuk <strong>semua bisnis kuliner</strong> — coffee shop, kafe, restoran, bakery, cloud kitchen, minuman kekinian. Platform pemesanan online lengkap bukan sekadar katalog.</p>
+        <div class="tb-pills">
+          <span class="tb-pill o">🛒 Pemesanan Online</span>
+          <span class="tb-pill o">💳 POS Kasir</span>
+          <span class="tb-pill o">⭐ Loyalty Points</span>
+          <span class="tb-pill o">🎫 Voucher & Promo</span>
+          <span class="tb-pill o">🏪 Multi Cabang</span>
+          <span class="tb-pill o">📊 Akuntansi</span>
+          <span class="tb-pill o">📱 PWA Mobile</span>
+          <span class="tb-pill o">🏷️ Banner Admin</span>
+        </div>
+        <div class="tb-footer">
+          <div>
+            <div class="tb-price">Rp 999k<span class="tb-price-badge">FREE SETUP</span></div>
+            <div class="tb-price-sub">Bayar sekali · kami yang deploy-kan</div>
+          </div>
+          <a href="https://demo-coffee-shop-v2.vercel.app/" target="_blank" class="btn-demo-link">Demo ↗</a>
+          <button class="btn-order-now btn-on-orange open-modal" data-product="fnb" data-name="Website UMKM F&B" data-price="Rp 999k">Pesan →</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- DISTRIBUTOR BLOCK -->
+    <div class="template-block">
+      <div class="tb-content rv-r" style="order:1">
+        <span class="tb-tag teal">📦 Template Distributor</span>
+        <h2 class="tb-title">SISTEM<span class="italic-line tb-italic-teal">Distribusi</span>3-IN-1</h2>
+        <p class="tb-desc">Panel <strong>Admin</strong>, <strong>Salesman mobile</strong>, dan <strong>portal Supplier</strong> — terintegrasi penuh. Satu platform untuk seluruh rantai distribusi bisnis Anda.</p>
+        <div class="tb-pills">
+          <span class="tb-pill t">🖥️ Panel Admin</span>
+          <span class="tb-pill t">📱 Salesman Mobile</span>
+          <span class="tb-pill t">🏪 Portal Supplier</span>
+          <span class="tb-pill t">📦 Purchase Order</span>
+          <span class="tb-pill t">🚚 Stok Kendaraan</span>
+          <span class="tb-pill t">💰 Laporan L/R</span>
+          <span class="tb-pill t">📍 Absensi GPS</span>
+          <span class="tb-pill t">🏭 Multi Gudang</span>
+        </div>
+        <div class="tb-footer">
+          <div>
+            <div class="tb-price" style="color:var(--teal)">Rp 999k<span class="tb-price-badge" style="background:var(--teal)">FREE SETUP</span></div>
+            <div class="tb-price-sub">Bayar sekali · kami yang deploy-kan</div>
+          </div>
+          <a href="https://distributor-snack.vercel.app/" target="_blank" class="btn-demo-link">Demo ↗</a>
+          <button class="btn-order-now btn-on-teal open-modal" data-product="distributor" data-name="Website Distributor" data-price="Rp 999k">Pesan →</button>
+        </div>
+      </div>
+      <div class="tb-visual dist-vis" style="order:2">
+        <div class="tb-num">02</div>
+        <span class="tb-obj tb-obj-1">📦</span>
+        <span class="tb-obj tb-obj-2">🚚</span>
+        <div class="tb-screen">
+          <div class="tb-screen-bar">
+            <div class="tbd tbd-r"></div><div class="tbd tbd-y"></div><div class="tbd tbd-g"></div>
+            <div class="tb-addr"></div>
+          </div>
+          <div class="tb-iframe-wrap teal-bg">
+            <iframe class="tb-screen-iframe" src="https://distributor-snack.vercel.app/" title="Demo Distributor" sandbox="allow-scripts allow-same-origin" loading="lazy"></iframe>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- KASIR POS BLOCK -->
+    <div class="template-block">
+      <div class="tb-visual kasir-vis">
+        <div class="tb-num">03</div>
+        <span class="tb-obj tb-obj-1">🖥️</span>
+        <span class="tb-obj tb-obj-2">🧾</span>
+        <div class="tb-screen">
+          <div class="tb-screen-bar">
+            <div class="tbd tbd-r"></div><div class="tbd tbd-y"></div><div class="tbd tbd-g"></div>
+            <div class="tb-addr"></div>
+          </div>
+          <div class="tb-iframe-wrap purple-bg">
+            <iframe class="tb-screen-iframe" src="https://irvansignora.github.io/Kasir-Offline/" title="Demo Kasir POS" sandbox="allow-scripts allow-same-origin" loading="lazy"></iframe>
+          </div>
+        </div>
+      </div>
+      <div class="tb-content rv-l">
+        <span class="tb-tag purple new-badge">🖥️ Kasir POS</span>
+        <h2 class="tb-title">KASIR<br>OFFLINE<span class="italic-line tb-italic-purple">POS System</span></h2>
+        <p class="tb-desc">Sistem kasir <strong>offline-first</strong> yang bisa dipakai tanpa internet. Cocok untuk toko retail, warung, kafe, food stall, dan semua usaha yang butuh kasir cepat dan andal.</p>
+        <div class="tb-pills">
+          <span class="tb-pill p">🛒 Kasir Transaksi</span>
+          <span class="tb-pill p">📦 Manajemen Produk</span>
+          <span class="tb-pill p">📊 Dashboard Realtime</span>
+          <span class="tb-pill p">📋 Riwayat Transaksi</span>
+          <span class="tb-pill p">👥 Multi User</span>
+          <span class="tb-pill p">🔐 Role Admin/Kasir</span>
+          <span class="tb-pill p">🖨️ Print Struk</span>
+          <span class="tb-pill p">📶 Offline Mode</span>
+        </div>
+        <div class="tb-footer">
+          <div>
+            <div class="tb-price" style="color:var(--purple)">Rp 50k<span class="tb-price-badge" style="background:var(--purple)">/USER</span></div>
+            <div class="tb-price-sub">Per pengguna · Akses selamanya</div>
+          </div>
+          <a href="https://irvansignora.github.io/Kasir-Offline/" target="_blank" class="btn-demo-link">Demo ↗</a>
+          <button class="btn-order-now btn-on-purple open-modal" data-product="kasir" data-name="Kasir POS Offline" data-price="Rp 50k/User">Pesan →</button>
+        </div>
+      </div>
+    </div>
+
+  </section>
+
+  <!-- KASIR POS DEMO EMBED -->
+  <div class="kasir-demo-section">
+    <div class="kasir-demo-inner">
+      <div class="kasir-demo-label">Coba Langsung</div>
+      <h2 class="kasir-demo-title">DEMO KASIR POS — LIVE 🖥️</h2>
+      <p class="kasir-demo-desc">Coba sistem kasir kami langsung di sini. Login dengan username <strong style="color:var(--gold)">admin</strong> / password <strong style="color:var(--gold)">admin123</strong></p>
+      <div class="kasir-demo-frame">
+        <div class="kasir-demo-bar">
+          <div class="tbd tbd-r"></div><div class="tbd tbd-y"></div><div class="tbd tbd-g"></div>
+          <div class="kasir-demo-url">https://irvansignora.github.io/Kasir-Offline/</div>
+        </div>
+        <iframe class="kasir-demo-iframe" src="https://irvansignora.github.io/Kasir-Offline/" title="Demo Kasir POS Live" sandbox="allow-scripts allow-same-origin allow-forms" loading="lazy"></iframe>
+      </div>
+      <div style="margin-top:28px;">
+        <a href="https://irvansignora.github.io/Kasir-Offline/" target="_blank" style="display:inline-flex;align-items:center;gap:8px;padding:14px 32px;background:var(--purple);color:#fff;border-radius:100px;font-weight:700;text-decoration:none;font-size:14px;transition:all .25s;" onmouseenter="this.style.transform='translateY(-2px)';this.style.boxShadow='0 12px 32px rgba(107,63,160,.5)'" onmouseleave="this.style.transform='';this.style.boxShadow=''">
+          Buka di Tab Baru ↗
+        </a>
+        <button class="btn-order-now btn-on-purple open-modal" style="margin-left:12px;" data-product="kasir" data-name="Kasir POS Offline" data-price="Rp 50k/User">🛒 Beli Sekarang — Rp 50k/User</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="marquee-strip purple">
+    <div class="mq mq-rev">
+      <span class="mq-item">Kasir POS Offline <span class="mq-sep">✦</span></span>
+      <span class="mq-item">Rp 50.000/User <span class="mq-sep">✦</span></span>
+      <span class="mq-item">Multi User <span class="mq-sep">✦</span></span>
+      <span class="mq-item">Dashboard Admin <span class="mq-sep">✦</span></span>
+      <span class="mq-item">Print Struk <span class="mq-sep">✦</span></span>
+      <span class="mq-item">Offline Mode <span class="mq-sep">✦</span></span>
+      <span class="mq-item">Kasir POS Offline <span class="mq-sep">✦</span></span>
+      <span class="mq-item">Rp 50.000/User <span class="mq-sep">✦</span></span>
+      <span class="mq-item">Multi User <span class="mq-sep">✦</span></span>
+      <span class="mq-item">Dashboard Admin <span class="mq-sep">✦</span></span>
+      <span class="mq-item">Print Struk <span class="mq-sep">✦</span></span>
+      <span class="mq-item">Offline Mode <span class="mq-sep">✦</span></span>
+    </div>
+  </div>
+
+  <section id="faq">
+    <div class="faq-inner">
+      <div class="faq-header rv"><h2 class="faq-h-title">ADA<br><em>Pertanyaan?</em></h2></div>
+      <div class="faq-list">
+        <div class="faq-item rv"><div class="faq-q">Apa yang dimaksud "free setup"? <span class="faq-icon">+</span></div><div class="faq-a">Kami lakukan setup server/hosting, deploy aplikasi, konfigurasi database, dan pastikan website sudah berjalan. Anda tidak perlu tahu coding sama sekali — tinggal terima jadi.</div></div>
+        <div class="faq-item rv d1"><div class="faq-q">Kasir POS harga Rp 50k per user artinya apa? <span class="faq-icon">+</span></div><div class="faq-a">Setiap akun pengguna (kasir atau admin) dikenakan biaya Rp 50.000 sekali bayar. Jika kamu perlu 3 kasir + 1 admin = 4 user × Rp 50k = Rp 200k. Akses selamanya tanpa biaya bulanan.</div></div>
+        <div class="faq-item rv d2"><div class="faq-q">Apakah Kasir POS bisa dipakai tanpa internet? <span class="faq-icon">+</span></div><div class="faq-a">Ya! Kasir POS kami bersifat offline-first. Semua data transaksi disimpan di perangkat. Anda bisa bertransaksi meski tidak ada koneksi internet.</div></div>
+        <div class="faq-item rv d3"><div class="faq-q">Berapa lama proses setup setelah bayar? <span class="faq-icon">+</span></div><div class="faq-a">Mulai proses dalam 1×24 jam setelah pembayaran terkonfirmasi. Rata-rata selesai 4–8 jam kerja, tergantung konfigurasi yang diminta.</div></div>
+        <div class="faq-item rv d1"><div class="faq-q">Ada garansi atau support setelah setup? <span class="faq-icon">+</span></div><div class="faq-a">Support via WhatsApp 30 hari (60 hari untuk bundle). Jika ada bug atau masalah teknis setelah setup, kami bantu perbaiki tanpa biaya tambahan.</div></div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="footer-inner">
+      <div class="footer-top">
+        <div>
+          <div class="f-logo">Alzy<span>Fams</span></div>
+          <p class="f-tagline">Produk digital premium untuk bisnis kamu — template website, kasir POS, SaaS, dan tools siap pakai.</p>
+        </div>
+        <div class="f-links">
+          <div class="f-col"><h4>Produk</h4><a href="#" onclick="showPage('produk');return false;">Website F&B</a><a href="#" onclick="showPage('produk');return false;">Website Distributor</a><a href="#" onclick="showPage('produk');return false;">Kasir POS</a></div>
+          <div class="f-col"><h4>Demo</h4><a href="https://demo-coffee-shop-v2.vercel.app/" target="_blank">Demo F&B ↗</a><a href="https://distributor-snack.vercel.app/" target="_blank">Demo Distributor ↗</a><a href="https://irvansignora.github.io/Kasir-Offline/" target="_blank">Demo Kasir ↗</a></div>
+          <div class="f-col"><h4>Kontak</h4><a href="https://wa.me/6285776077292" target="_blank">WhatsApp ↗</a><a href="#" onclick="showPage('kontak');return false;">Kontak Kami</a></div>
+        </div>
+      </div>
+      <div class="f-div"></div>
+      <p class="f-copy">© 2025 ALZYFAMS SHOP · DIBUAT DENGAN ❤️ UNTUK BISNIS INDONESIA</p>
+    </div>
+  </footer>
+</div>
+
+<!-- ═══════════════════════════════════════
+     PAGE: HARGA
+═══════════════════════════════════════ -->
+<div class="page" id="page-harga">
+  <div class="page-hero">
+    <div class="page-hero-deco">HARGA</div>
+    <div style="position:relative;z-index:5;">
+      <div class="page-breadcrumb"><a href="#" onclick="showPage('home');return false;">Beranda</a> / <span>Harga</span></div>
+      <div class="page-hero-label">Harga Transparan</div>
+      <h1 class="page-hero-title">INVESTASI<br><em>Terjangkau.</em></h1>
+      <p class="page-hero-sub">Semua harga sudah termasuk setup & deploy penuh. Tidak ada biaya tersembunyi. Tidak ada jebakan.</p>
+    </div>
+  </div>
+
+  <section id="pricing" style="border-top:3px solid var(--ink);">
+    <div class="pricing-header rv">
+      <div class="pricing-h-top">
+        <div>
+          <span class="pricing-h-label">Investasi Bisnis</span>
+          <h2 class="pricing-h-title">HARGA<br><em>Transparan.</em></h2>
+        </div>
+        <p class="pricing-h-sub">Semua harga sudah termasuk setup & deploy penuh. Tidak ada biaya tersembunyi.</p>
+      </div>
+    </div>
+    <div class="pricing-grid">
+      <div class="price-col rv d1">
+        <div class="pc-eyebrow pce-o">☕ F&B</div>
+        <h3 class="pc-name">Website F&B</h3>
+        <p class="pc-desc">Coffee shop, restoran, bakery, cloud kitchen — semua bisnis kuliner.</p>
+        <div><span class="pc-price">999k</span></div>
+        <p class="pc-note">Termasuk setup + deploy · Bayar sekali</p>
+        <ul class="pc-ul">
+          <li class="o">Pemesanan online lengkap</li>
+          <li class="o">POS Kasir terintegrasi</li>
+          <li class="o">Dashboard admin</li>
+          <li class="o">Loyalty Points & Voucher</li>
+          <li class="o">Multi cabang / outlet</li>
+          <li class="o">Laporan & akuntansi</li>
+          <li class="o">PWA (install di HP)</li>
+          <li class="o">Free setup & deploy</li>
+          <li class="o">Free update selamanya</li>
+          <li class="o">Support WA 30 hari</li>
+        </ul>
+        <button class="pc-cta cta-orange open-modal" data-product="fnb" data-name="Website UMKM F&B" data-price="Rp 999k">Pesan Sekarang →</button>
+      </div>
+
+      <div class="price-col rv d2">
+        <div class="pc-eyebrow pce-t">📦 Distributor</div>
+        <h3 class="pc-name">Website Distributor</h3>
+        <p class="pc-desc">Sistem distribusi 3-in-1: Admin, Salesman, dan Supplier.</p>
+        <div><span class="pc-price" style="color:var(--teal)">999k</span></div>
+        <p class="pc-note">Termasuk setup + deploy · Bayar sekali</p>
+        <ul class="pc-ul">
+          <li class="t">Panel Admin lengkap</li>
+          <li class="t">Panel Salesman mobile</li>
+          <li class="t">Portal Supplier / Toko</li>
+          <li class="t">Stok multi-gudang</li>
+          <li class="t">Purchase Order & bayar</li>
+          <li class="t">Laporan laba/rugi</li>
+          <li class="t">Absensi GPS salesman</li>
+          <li class="t">Free setup & deploy</li>
+          <li class="t">Free update selamanya</li>
+          <li class="t">Support WA 30 hari</li>
+        </ul>
+        <button class="pc-cta cta-teal open-modal" data-product="distributor" data-name="Website Distributor" data-price="Rp 999k">Pesan Sekarang →</button>
+      </div>
+
+      <div class="price-col rv d3">
+        <div class="pc-eyebrow pce-p">🖥️ Kasir POS</div>
+        <h3 class="pc-name">Kasir POS Offline</h3>
+        <p class="pc-desc">Sistem kasir offline untuk toko, warung, kafe, dan usaha retail.</p>
+        <div><span class="pc-price" style="color:var(--purple)">50k</span></div>
+        <p class="pc-note">Per user · Akses selamanya</p>
+        <ul class="pc-ul">
+          <li class="p">Kasir transaksi lengkap</li>
+          <li class="p">Manajemen produk & stok</li>
+          <li class="p">Dashboard & statistik</li>
+          <li class="p">Riwayat transaksi</li>
+          <li class="p">Multi user & role</li>
+          <li class="p">Admin & kasir roles</li>
+          <li class="p">Print struk transaksi</li>
+          <li class="p">Offline mode</li>
+          <li class="p">Data tersimpan lokal</li>
+          <li class="p">Support WA 30 hari</li>
+        </ul>
+        <button class="pc-cta cta-purple open-modal" data-product="kasir" data-name="Kasir POS Offline" data-price="Rp 50k/User">Pesan Sekarang →</button>
+      </div>
+
+      <div class="price-col hot rv d4">
+        <div class="pc-eyebrow pce-hot">🔥 Bundle Hemat</div>
+        <h3 class="pc-name">Bundle Semua</h3>
+        <p class="pc-desc">Ambil semua produk. Hemat lebih banyak. Prioritas antrian setup.</p>
+        <div><span class="pc-price">1.899k</span><span class="pc-old">2.048k</span></div>
+        <p class="pc-note">Hemat ~Rp 150k lebih · Setup semua produk</p>
+        <ul class="pc-ul">
+          <li class="h">Website F&B (lengkap)</li>
+          <li class="h">Website Distributor</li>
+          <li class="h">Kasir POS (5 user)</li>
+          <li class="h">Free setup & deploy keduanya</li>
+          <li class="h">Domain gratis 1 tahun</li>
+          <li class="h">Support WA 60 hari</li>
+          <li class="h">Free update selamanya</li>
+          <li class="h">Prioritas antrian setup</li>
+          <li class="h">Training admin via Zoom</li>
+        </ul>
+        <button class="pc-cta cta-gold open-modal" data-product="bundle" data-name="Bundle Semua Produk" data-price="Rp 1.899k">🛒 Ambil Bundle Sekarang →</button>
+      </div>
+    </div>
+    <p class="price-note">💳 QRIS · GoPay · OVO · VA Bank · ShopeePay · Kartu Kredit &nbsp;·&nbsp; ⚡ Setup mulai 1×24 jam setelah bayar</p>
+    <div class="pricing-page-note rv" style="max-width:700px;margin:20px auto 0;">
+      <strong>💡 Catatan Kasir POS:</strong> Harga Rp 50.000 berlaku per pengguna (user account). Contoh: 2 kasir + 1 admin = 3 user × Rp 50k = Rp 150.000. Bundle sudah termasuk 5 user Kasir POS.
+    </div>
+  </section>
+
+  <section id="how-to-order">
+    <div class="hto-header rv">
+      <div class="hto-label">Cara Pemesanan</div>
+      <h2 class="hto-title">GAMPANG<br><em>Banget! 👌</em></h2>
+    </div>
+    <div class="hto-steps">
+      <div class="hto-step rv d1">
+        <div class="hto-step-num">1</div>
+        <span class="hto-step-ico">👀</span>
+        <h3 class="hto-step-title">Pilih Produk</h3>
+        <p class="hto-step-desc">Lihat produk kami. Coba demo live, cek semua fiturnya. Pilih yang sesuai bisnis kamu.</p>
+      </div>
+      <div class="hto-step rv d2">
+        <div class="hto-step-num">2</div>
+        <span class="hto-step-ico">💳</span>
+        <h3 class="hto-step-title">Bayar via Midtrans</h3>
+        <p class="hto-step-desc">Midtrans Snap popup terbuka langsung di halaman ini. Pilih metode: QRIS, GoPay, OVO, ShopeePay, VA Bank, Kartu Kredit, dll.</p>
+      </div>
+      <div class="hto-step rv d3">
+        <div class="hto-step-num">3</div>
+        <span class="hto-step-ico">✅</span>
+        <h3 class="hto-step-title">Konfirmasi Otomatis</h3>
+        <p class="hto-step-desc">Setelah bayar, sistem mencatat order otomatis via webhook Midtrans. Kamu terima email konfirmasi.</p>
+      </div>
+      <div class="hto-step rv d4">
+        <div class="hto-step-num">4</div>
+        <span class="hto-step-ico">🚀</span>
+        <h3 class="hto-step-title">Produk Live!</h3>
+        <p class="hto-step-desc">Dalam 4–8 jam kerja, produkmu sudah siap digunakan. Kami antar sampai jalan!</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="payment">
+    <div class="payment-header rv">
+      <div class="payment-label">Metode Pembayaran</div>
+      <h2 class="payment-title">BAYAR<br><em>Fleksibel.</em></h2>
+    </div>
+    <div class="payment-methods">
+      <div class="pm-item rv d1"><span class="pm-ico">📱</span><div class="pm-name">QRIS</div><div class="pm-desc">Scan & Pay</div></div>
+      <div class="pm-item rv d2"><span class="pm-ico">💚</span><div class="pm-name">GoPay</div><div class="pm-desc">Gojek</div></div>
+      <div class="pm-item rv d3"><span class="pm-ico">💜</span><div class="pm-name">OVO</div><div class="pm-desc">OVO Cash</div></div>
+      <div class="pm-item rv d1"><span class="pm-ico">🏦</span><div class="pm-name">VA Bank</div><div class="pm-desc">BCA, Mandiri, BNI</div></div>
+      <div class="pm-item rv d2"><span class="pm-ico">🛍️</span><div class="pm-name">ShopeePay</div><div class="pm-desc">Shopee</div></div>
+      <div class="pm-item rv d3"><span class="pm-ico">💳</span><div class="pm-name">Kartu Kredit</div><div class="pm-desc">Visa & Mastercard</div></div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="footer-inner">
+      <div class="footer-top">
+        <div>
+          <div class="f-logo">Alzy<span>Fams</span></div>
+          <p class="f-tagline">Produk digital premium untuk bisnis kamu — template website, kasir POS, SaaS, dan tools siap pakai.</p>
+        </div>
+        <div class="f-links">
+          <div class="f-col"><h4>Produk</h4><a href="#" onclick="showPage('produk');return false;">Website F&B</a><a href="#" onclick="showPage('produk');return false;">Website Distributor</a><a href="#" onclick="showPage('produk');return false;">Kasir POS</a></div>
+          <div class="f-col"><h4>Demo</h4><a href="https://demo-coffee-shop-v2.vercel.app/" target="_blank">Demo F&B ↗</a><a href="https://distributor-snack.vercel.app/" target="_blank">Demo Distributor ↗</a><a href="https://irvansignora.github.io/Kasir-Offline/" target="_blank">Demo Kasir ↗</a></div>
+          <div class="f-col"><h4>Kontak</h4><a href="https://wa.me/6285776077292" target="_blank">WhatsApp ↗</a><a href="#" onclick="showPage('kontak');return false;">Kontak Kami</a></div>
+        </div>
+      </div>
+      <div class="f-div"></div>
+      <p class="f-copy">© 2025 ALZYFAMS SHOP · DIBUAT DENGAN ❤️ UNTUK BISNIS INDONESIA</p>
+    </div>
+  </footer>
+</div>
+
+<!-- ═══════════════════════════════════════
+     PAGE: TENTANG
+═══════════════════════════════════════ -->
+<div class="page" id="page-tentang">
+  <div class="page-hero">
+    <div class="page-hero-deco">ABOUT</div>
+    <div style="position:relative;z-index:5;">
+      <div class="page-breadcrumb"><a href="#" onclick="showPage('home');return false;">Beranda</a> / <span>Tentang</span></div>
+      <div class="page-hero-label">Tentang AlzyFams</div>
+      <h1 class="page-hero-title">KAMI<br><em>Untuk UMKM.</em></h1>
+      <p class="page-hero-sub">AlzyFams lahir dari semangat membantu UMKM Indonesia tumbuh lewat teknologi yang terjangkau dan mudah digunakan.</p>
+    </div>
+  </div>
+
+  <section id="statement">
+    <div class="statement-deco">AlzyFams</div>
+    <div class="statement-inner">
+      <div class="statement-label">Misi Kami</div>
+      <div class="statement-text rv">
+        Kami bikin produk digital<br>
+        yang <em>beneran menjual</em> —<br>
+        bukan sekadar <span class="accent">terlihat keren.</span><br>
+        Banyak pilihan, langsung jalan.
+      </div>
+    </div>
+  </section>
+
+  <section id="why">
+    <div class="why-header">
+      <div class="why-h-label">Nilai Kami</div>
+      <h2 class="why-h-title">KENAPA<br><em>Pilih Kami?</em></h2>
+    </div>
+    <div class="why-grid">
+      <div class="why-card rv d1">
+        <div class="why-card-bar wcb1"></div>
+        <div class="why-card-n">01</div>
+        <span class="why-card-ico">⚡</span>
+        <h3 class="why-card-title">Langsung Jalan</h3>
+        <p class="why-card-desc">Semua produk siap pakai. Tidak ada konfigurasi rumit, tidak ada perlu tahu coding. Beli, setup, langsung cuan dalam 24 jam.</p>
+      </div>
+      <div class="why-card rv d2">
+        <div class="why-card-bar wcb2"></div>
+        <div class="why-card-n">02</div>
+        <span class="why-card-ico">🛡️</span>
+        <h3 class="why-card-title">Bayar Sekali</h3>
+        <p class="why-card-desc">Tidak ada subscription bulanan dari kami. Template dan Kasir POS — bayar sekali, pakai selamanya. Free update untuk selamanya.</p>
+      </div>
+      <div class="why-card rv d3">
+        <div class="why-card-bar wcb3"></div>
+        <div class="why-card-n">03</div>
+        <span class="why-card-ico">💬</span>
+        <h3 class="why-card-title">Support Real</h3>
+        <p class="why-card-desc">Bukan hanya bot atau FAQ. Tim nyata via WhatsApp yang respon cepat. Support 30–60 hari penuh setelah pembelian.</p>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="footer-inner">
+      <div class="footer-top">
+        <div>
+          <div class="f-logo">Alzy<span>Fams</span></div>
+          <p class="f-tagline">Produk digital premium untuk bisnis kamu — template website, kasir POS, SaaS, dan tools siap pakai.</p>
+        </div>
+        <div class="f-links">
+          <div class="f-col"><h4>Produk</h4><a href="#" onclick="showPage('produk');return false;">Website F&B</a><a href="#" onclick="showPage('produk');return false;">Website Distributor</a><a href="#" onclick="showPage('produk');return false;">Kasir POS</a></div>
+          <div class="f-col"><h4>Demo</h4><a href="https://demo-coffee-shop-v2.vercel.app/" target="_blank">Demo F&B ↗</a><a href="https://distributor-snack.vercel.app/" target="_blank">Demo Distributor ↗</a><a href="https://irvansignora.github.io/Kasir-Offline/" target="_blank">Demo Kasir ↗</a></div>
+          <div class="f-col"><h4>Kontak</h4><a href="https://wa.me/6285776077292" target="_blank">WhatsApp ↗</a></div>
+        </div>
+      </div>
+      <div class="f-div"></div>
+      <p class="f-copy">© 2025 ALZYFAMS SHOP · DIBUAT DENGAN ❤️ UNTUK BISNIS INDONESIA</p>
+    </div>
+  </footer>
+</div>
+
+<!-- ═══════════════════════════════════════
+     PAGE: KONTAK
+═══════════════════════════════════════ -->
+<div class="page" id="page-kontak">
+  <div class="page-hero">
+    <div class="page-hero-deco">KONTAK</div>
+    <div style="position:relative;z-index:5;">
+      <div class="page-breadcrumb"><a href="#" onclick="showPage('home');return false;">Beranda</a> / <span>Kontak</span></div>
+      <div class="page-hero-label">Hubungi Kami</div>
+      <h1 class="page-hero-title">CHAT<br><em>Langsung!</em></h1>
+      <p class="page-hero-sub">Ada pertanyaan? Mau konsultasi produk? Tim kami siap bantu via WhatsApp 7 hari seminggu.</p>
+    </div>
+  </div>
+
+  <section style="padding:100px 60px;background:var(--cream);">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:80px;max-width:1000px;margin:0 auto;" class="kontak-grid">
+      <div class="rv-l">
+        <div style="font-family:'Space Mono',monospace;font-size:11px;color:var(--orange);letter-spacing:3px;text-transform:uppercase;margin-bottom:20px;">Kontak Info</div>
+        <h2 style="font-family:'Anton',sans-serif;font-size:clamp(40px,5vw,64px);text-transform:uppercase;letter-spacing:-1px;line-height:.9;margin-bottom:32px;">SIAP<br><em style="font-family:'DM Serif Display',serif;font-style:italic;color:var(--orange);text-transform:none;">Membantu!</em></h2>
+        <p style="font-size:15px;color:rgba(26,20,8,.6);line-height:1.75;margin-bottom:40px;">Tim AlzyFams siap membantu kamu dari konsultasi produk, pemesanan, hingga support teknis setelah pembelian.</p>
+        <div style="display:flex;flex-direction:column;gap:20px;">
+          <a href="https://wa.me/6285776077292" target="_blank" style="display:flex;align-items:center;gap:16px;padding:20px 24px;background:var(--ink);color:#fff;text-decoration:none;border-radius:4px;transition:all .25s;" onmouseenter="this.style.background='#25D366'" onmouseleave="this.style.background='var(--ink)'">
+            <span style="font-size:32px;">💬</span>
+            <div>
+              <div style="font-weight:800;font-size:14px;letter-spacing:.5px;">WhatsApp</div>
+              <div style="font-size:12px;opacity:.6;">+62 812-3456-7890 · Respon cepat!</div>
+            </div>
+          </a>
+          <a href="mailto:hello@alzyfams.com" style="display:flex;align-items:center;gap:16px;padding:20px 24px;background:var(--sand);color:var(--ink);text-decoration:none;border-radius:4px;border:2.5px solid var(--ink);transition:all .25s;" onmouseenter="this.style.background='var(--gold)'" onmouseleave="this.style.background='var(--sand)'">
+            <span style="font-size:32px;">📧</span>
+            <div>
+              <div style="font-weight:800;font-size:14px;letter-spacing:.5px;">Email</div>
+              <div style="font-size:12px;opacity:.6;">hello@alzyfams.com</div>
+            </div>
+          </a>
+          <div style="display:flex;align-items:center;gap:16px;padding:20px 24px;background:var(--sky);color:var(--ink);border-radius:4px;border:2.5px solid var(--ink);">
+            <span style="font-size:32px;">⏰</span>
+            <div>
+              <div style="font-weight:800;font-size:14px;letter-spacing:.5px;">Jam Operasional</div>
+              <div style="font-size:12px;opacity:.6;">Senin–Minggu · 08.00–21.00 WIB</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="rv-r">
+        <div style="background:var(--ink);padding:48px;border-radius:4px;">
+          <h3 style="font-family:'Anton',sans-serif;font-size:28px;color:#fff;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;">Kirim Pesan</h3>
+          <p style="font-size:13px;color:rgba(255,255,255,.4);margin-bottom:32px;">Kami balas dalam 1–2 jam kerja</p>
+          <div class="form-group">
+            <label class="form-label" style="color:rgba(255,255,255,.6);">Nama Lengkap</label>
+            <input type="text" class="form-input" placeholder="Nama kamu...">
+          </div>
+          <div class="form-group">
+            <label class="form-label" style="color:rgba(255,255,255,.6);">Nomor WhatsApp</label>
+            <input type="text" class="form-input" placeholder="0812xxxxxx">
+          </div>
+          <div class="form-group">
+            <label class="form-label" style="color:rgba(255,255,255,.6);">Produk yang Diminati</label>
+            <select class="form-select">
+              <option>Pilih produk...</option>
+              <option>Website F&B (Rp 999k)</option>
+              <option>Website Distributor (Rp 999k)</option>
+              <option>Kasir POS (Rp 50k/user)</option>
+              <option>Bundle Semua (Rp 1.899k)</option>
+              <option>Konsultasi dulu</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label" style="color:rgba(255,255,255,.6);">Pesan</label>
+            <textarea class="form-input" rows="3" placeholder="Ceritakan kebutuhan bisnis kamu..."></textarea>
+          </div>
+          <button class="form-submit" onclick="sendWhatsApp()">Kirim via WhatsApp →</button>
+        </div>
+      </div>
+    </div>
+    <style>.kontak-grid{} @media(max-width:768px){.kontak-grid{grid-template-columns:1fr!important;gap:40px!important;} section[style*="padding:100px 60px"]{padding:60px 24px!important;}}</style>
+  </section>
+
+  <footer>
+    <div class="footer-inner">
+      <div class="footer-top">
+        <div>
+          <div class="f-logo">Alzy<span>Fams</span></div>
+          <p class="f-tagline">Produk digital premium untuk bisnis kamu — template website, kasir POS, SaaS, dan tools siap pakai.</p>
+        </div>
+        <div class="f-links">
+          <div class="f-col"><h4>Produk</h4><a href="#" onclick="showPage('produk');return false;">Website F&B</a><a href="#" onclick="showPage('produk');return false;">Website Distributor</a><a href="#" onclick="showPage('produk');return false;">Kasir POS</a></div>
+          <div class="f-col"><h4>Demo</h4><a href="https://demo-coffee-shop-v2.vercel.app/" target="_blank">Demo F&B ↗</a><a href="https://distributor-snack.vercel.app/" target="_blank">Demo Distributor ↗</a><a href="https://irvansignora.github.io/Kasir-Offline/" target="_blank">Demo Kasir ↗</a></div>
+          <div class="f-col"><h4>Info</h4><a href="https://wa.me/6285776077292" target="_blank">WhatsApp ↗</a><a href="#" onclick="showPage('tentang');return false;">Tentang Kami</a></div>
+        </div>
+      </div>
+      <div class="f-div"></div>
+      <p class="f-copy">© 2025 ALZYFAMS SHOP · DIBUAT DENGAN ❤️ UNTUK BISNIS INDONESIA</p>
+    </div>
+  </footer>
+</div>
+
+<!-- ── WA FLOAT ── -->
+<a class="wa-float" href="https://wa.me/6285776077292" target="_blank" title="Chat WhatsApp">💬</a>
+<a id="back-top" href="#">↑</a>
+
+<!-- ── ORDER MODAL ── -->
+<div class="modal-overlay" id="modal">
+  <div class="modal-box">
+    <button class="modal-close" onclick="closeModal()">×</button>
+    <div class="modal-product-badge" id="modal-badge">📦 Produk</div>
+    <h2 class="modal-title">Pesan Sekarang</h2>
+    <p class="modal-sub" id="modal-sub">Isi form di bawah untuk melanjutkan ke pembayaran via Midtrans.</p>
+    <div class="form-group">
+      <label class="form-label">Nama Lengkap</label>
+      <input type="text" class="form-input" id="order-name" placeholder="Nama lengkap kamu...">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Email</label>
+      <input type="email" class="form-input" id="order-email" placeholder="email@kamu.com">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Nomor WhatsApp</label>
+      <input type="text" class="form-input" id="order-wa" placeholder="0812xxxxxx">
+    </div>
+    <div class="form-group" id="modal-user-group" style="display:none;">
+      <label class="form-label">Jumlah User (Kasir POS)</label>
+      <select class="form-select" id="order-users">
+        <option value="1">1 User — Rp 50.000</option>
+        <option value="2">2 User — Rp 100.000</option>
+        <option value="3">3 User — Rp 150.000</option>
+        <option value="5">5 User — Rp 250.000</option>
+        <option value="10">10 User — Rp 500.000</option>
+        <option value="custom">Custom (sebutkan di pesan)</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Nama Bisnis / Toko</label>
+      <input type="text" class="form-input" id="order-biz" placeholder="Nama usaha kamu...">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Catatan (opsional)</label>
+      <textarea class="form-input" id="order-note" rows="2" placeholder="Kebutuhan khusus, pertanyaan, dll..."></textarea>
+    </div>
+    <button class="form-submit" id="btn-submit-order" onclick="submitOrder()">💳 Bayar Sekarang →</button>
+  </div>
+</div>
+
+<script>
+// ── PAGE NAVIGATION ──
+var currentPage = 'home';
+function showPage(page){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.getElementById('page-'+page).classList.add('active');
+  document.querySelectorAll('.nav-links a').forEach(a=>a.classList.remove('active'));
+  var el = document.getElementById('nav-'+page);
+  if(el) el.classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+  currentPage = page;
+  // re-trigger reveals
+  setTimeout(triggerReveal, 100);
+}
+function closeMobileMenu(){
+  document.getElementById('hamburger').classList.remove('open');
+  document.getElementById('mobile-menu').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+// ── CURSOR ──
+var cur = document.getElementById('cursor');
+document.addEventListener('mousemove',function(e){
+  cur.style.left=e.clientX+'px';cur.style.top=e.clientY+'px';
+});
+document.querySelectorAll('a,button,.tb-pill,.sticker,.nav-cta,.pc-cta').forEach(function(el){
+  el.addEventListener('mouseenter',function(){cur.classList.add('big');});
+  el.addEventListener('mouseleave',function(){cur.classList.remove('big');});
+});
+
+// ── SCROLL PROGRESS ──
+var pb = document.getElementById('progress-bar');
+window.addEventListener('scroll',function(){
+  var scrolled=window.scrollY,total=document.documentElement.scrollHeight-window.innerHeight;
+  if(pb) pb.style.width=Math.min((scrolled/total)*100,100)+'%';
+});
+
+// ── BACK TO TOP ──
+var btt = document.getElementById('back-top');
+window.addEventListener('scroll',function(){
+  if(btt) btt.classList.toggle('show',window.scrollY>500);
+});
+if(btt) btt.addEventListener('click',function(e){e.preventDefault();window.scrollTo({top:0,behavior:'smooth'});});
+
+// ── HAMBURGER ──
+var ham=document.getElementById('hamburger'),mob=document.getElementById('mobile-menu');
+if(ham&&mob){
+  ham.addEventListener('click',function(){
+    ham.classList.toggle('open');mob.classList.toggle('open');
+    document.body.style.overflow=mob.classList.contains('open')?'hidden':'';
+  });
+}
+
+// ── NAV BG ON SCROLL ──
+window.addEventListener('scroll',function(){
+  var nav=document.getElementById('nav');if(!nav)return;
+  if(window.scrollY>60){
+    nav.style.background='rgba(245,240,228,.96)';
+    nav.style.backdropFilter='blur(20px)';
+    nav.style.boxShadow='0 4px 24px rgba(0,0,0,.08)';
+    nav.style.borderBottom='2px solid var(--ink)';
+    nav.style.mixBlendMode='normal';
+  }else{
+    nav.style.background='';nav.style.backdropFilter='';
+    nav.style.boxShadow='';nav.style.borderBottom='';
+    nav.style.mixBlendMode='multiply';
+  }
+});
+
+// ── HERO PARALLAX ──
+window.addEventListener('scroll',function(){
+  var sy=window.scrollY;if(sy>window.innerHeight)return;
+  document.querySelectorAll('.float-obj').forEach(function(o,i){
+    var speed=(i%2===0?-0.15:0.12)*(i+1)*0.4;
+    o.style.transform='translateY('+(sy*speed)+'px)';
+  });
+  document.querySelectorAll('.hill').forEach(function(h,i){
+    h.style.transform='translateY('+(sy*(0.08*(i+1)))+'px)';
+  });
+  document.querySelectorAll('.cloud').forEach(function(c,i){
+    c.style.transform='translateY('+(sy*0.05*(i+1))+'px)';
+  });
+});
+
+// ── COUNTER ANIMATION ──
+function animCount(el){
+  var target=parseInt(el.dataset.target),suffix=el.dataset.suffix||'',dur=1600,start=performance.now();
+  function step(now){var p=Math.min((now-start)/dur,1),ease=1-Math.pow(1-p,3);el.textContent=Math.floor(ease*target)+suffix;if(p<1)requestAnimationFrame(step);else el.textContent=target+suffix;}
+  requestAnimationFrame(step);
+}
+
+// ── SCROLL REVEAL ──
+function triggerReveal(){
+  var io=new IntersectionObserver(function(entries){
+    entries.forEach(function(e){
+      if(e.isIntersecting){
+        e.target.classList.add('vis');
+        e.target.querySelectorAll('.counter').forEach(animCount);
+        io.unobserve(e.target);
+      }
+    });
+  },{threshold:0.12});
+  document.querySelectorAll('#page-'+currentPage+' .rv, #page-'+currentPage+' .rv-l, #page-'+currentPage+' .rv-r, #page-'+currentPage+' .stat-block, #page-'+currentPage+' .testi-card').forEach(function(el){
+    el.classList.remove('vis');
+    io.observe(el);
+  });
+}
+triggerReveal();
+
+// ── FAQ ACCORDION ──
+document.querySelectorAll('.faq-q').forEach(function(q){
+  q.addEventListener('click',function(){
+    var item=this.parentElement;
+    var wasOpen=item.classList.contains('open');
+    document.querySelectorAll('.faq-item').forEach(function(i){i.classList.remove('open');});
+    if(!wasOpen) item.classList.add('open');
+  });
+});
+
+// ── MODAL ──
+var modalProductData={};
+function openModal(product,name,price){
+  modalProductData={product,name,price};
+  document.getElementById('modal-badge').textContent=(product==='fnb'?'☕':product==='distributor'?'📦':product==='kasir'?'🖥️':'🔥')+' '+name;
+  document.getElementById('modal-sub').textContent='Harga: '+price+' — Isi form di bawah, kami hubungi via WhatsApp.';
+  document.getElementById('modal-user-group').style.display=product==='kasir'?'block':'none';
+  document.getElementById('modal').classList.add('open');
+  document.body.style.overflow='hidden';
+}
+function closeModal(){document.getElementById('modal').classList.remove('open');document.body.style.overflow='';}
+document.getElementById('modal').addEventListener('click',function(e){if(e.target===this)closeModal();});
+document.querySelectorAll('.open-modal').forEach(function(btn){
+  btn.addEventListener('click',function(){
+    openModal(this.dataset.product,this.dataset.name,this.dataset.price);
+  });
+});
+
+function submitOrder(){
+  var name=document.getElementById('order-name').value.trim();
+  var email=document.getElementById('order-email').value.trim();
+  var wa=document.getElementById('order-wa').value.trim();
+  if(!name||!email||!wa){alert('Nama, email, dan nomor WhatsApp wajib diisi!');return;}
+
+  var productKey=modalProductData.product;
+  if(productKey==='kasir') productKey='pos_basic';
+
+  var btn=document.getElementById('btn-submit-order');
+  if(btn){btn.disabled=true;btn.textContent='Memproses...';}
+
+  fetch('/api/create-payment',{
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({
+      product: productKey,
+      name: name,
+      email: email,
+      phone: wa
+    })
+  })
+  .then(function(r){return r.json();})
+  .then(function(data){
+    if(btn){btn.disabled=false;btn.textContent='💳 Bayar Sekarang →';}
+    if(!data.success){
+      alert('Gagal membuat pembayaran: '+(data.message||'Error tidak diketahui'));
+      return;
+    }
+    // Set client key ke snap.js jika belum terset
+    var snapScript=document.getElementById('midtrans-snap');
+    if(snapScript&&data.clientKey) snapScript.setAttribute('data-client-key',data.clientKey);
+
+    closeModal();
+    // Buka Midtrans Snap popup
+    if(window.snap){
+      window.snap.pay(data.snapToken,{
+        onSuccess: function(result){
+          window.location.href='/success.html?order_id='+result.order_id;
+        },
+        onPending: function(result){
+          window.location.href='/success.html?order_id='+result.order_id;
+        },
+        onError: function(result){
+          alert('Pembayaran gagal. Silakan coba lagi.');
+          console.error('Midtrans error:',result);
+        },
+        onClose: function(){
+          console.log('Popup Midtrans ditutup oleh user.');
+        }
+      });
+    } else {
+      // Fallback: redirect ke Midtrans hosted page
+      window.location.href=data.redirectUrl;
+    }
+  })
+  .catch(function(err){
+    if(btn){btn.disabled=false;btn.textContent='💳 Bayar Sekarang →';}
+    alert('Terjadi error: '+err.message);
+  });
+}
+
+function sendWhatsApp(){
+  var name=document.querySelector('#page-kontak .form-input:nth-of-type(1)');
+  var msg='Halo AlzyFams! Saya ingin konsultasi produk digital.';
+  window.open('https://wa.me/6285776077292?text='+encodeURIComponent(msg),'_blank');
+}
+</script>
+</body>
+</html>
