@@ -321,8 +321,8 @@ nav{position:fixed;top:0;left:0;right:0;z-index:500;padding:0 60px;height:72px;d
 @media(max-width:600px){#cta{padding:60px 24px;}.cta-btns{flex-direction:column;}}
 
 /* ── FOOTER ── */
-footer{background:var(--ink);padding:72px 60px 40px;}
-.footer-inner{max-width:1200px;margin:0 auto;}
+footer{background:var(--ink);padding:0;}
+.footer-inner{width:100%;padding:72px 80px 40px;}
 .footer-top{display:grid;grid-template-columns:2fr 1fr;gap:80px;margin-bottom:48px;}
 .f-logo{font-family:'Anton',sans-serif;font-size:36px;color:#fff;letter-spacing:2px;text-transform:uppercase;margin-bottom:16px;}
 .f-logo span{color:var(--orange);}
@@ -333,7 +333,7 @@ footer{background:var(--ink);padding:72px 60px 40px;}
 .f-col a:hover{color:#fff;}
 .f-div{height:1px;background:rgba(255,255,255,.08);margin-bottom:28px;}
 .f-copy{font-size:11px;color:rgba(255,255,255,.2);letter-spacing:2px;text-transform:uppercase;}
-@media(max-width:800px){.footer-top{grid-template-columns:1fr;gap:40px;}.f-links{grid-template-columns:repeat(2,1fr);}footer{padding:48px 24px 28px;}}
+@media(max-width:800px){.footer-top{grid-template-columns:1fr;gap:40px;}.f-links{grid-template-columns:repeat(2,1fr);}.footer-inner{padding:48px 24px 28px;}}
 
 /* ── SCROLL REVEAL ── */
 .rv{opacity:0;transform:translateY(28px);transition:opacity .8s ease,transform .8s ease;}
