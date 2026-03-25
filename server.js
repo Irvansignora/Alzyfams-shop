@@ -1,6 +1,6 @@
 /**
  * ══════════════════════════════════════════════════════════
- * ALZYFAMS SHOP — Node.js Backend with Midtrans Payment Gateway
+ * IANZYA Hub — Node.js Backend with Midtrans Payment Gateway
  * ══════════════════════════════════════════════════════════
  *
  * Endpoints:
@@ -165,7 +165,7 @@ app.post("/api/create-payment", async (req, res) => {
     });
   }
 
-  const orderId = `AZ-${Date.now()}-${Math.random().toString(36).substr(2, 6).toUpperCase()}`;
+  const orderId = `IZ-${Date.now()}-${Math.random().toString(36).substr(2, 6).toUpperCase()}`;
 
   const snapBody = {
     transaction_details: {
@@ -179,7 +179,7 @@ app.post("/api/create-payment", async (req, res) => {
         quantity: 1,
         name: finalName,
         category: productInfo.category,
-        merchant_name: "AlzyFams Shop",
+        merchant_name: "IANZYA Hub",
       },
     ],
     customer_details: {
@@ -310,7 +310,7 @@ app.post("/api/webhook", async (req, res) => {
 
       if (internalStatus === "SUCCESS") {
         const msg =
-          `🔔 *ORDER MASUK — ALZYFAMS SHOP*\n\n` +
+          `🔔 *ORDER MASUK — IANZYA HUB*\n\n` +
           `✅ *Pembayaran Berhasil!*\n\n` +
           `📦 Produk : ${order.productName}\n` +
           `💰 Total   : ${amountFmt}\n` +
@@ -325,7 +325,7 @@ app.post("/api/webhook", async (req, res) => {
 
       if (internalStatus === "FAILED") {
         const msg =
-          `⚠️ *ORDER GAGAL — ALZYFAMS SHOP*\n\n` +
+          `⚠️ *ORDER GAGAL — IANZYA HUB*\n\n` +
           `Status : ${transactionStatus}\n` +
           `Produk : ${order.productName}\n` +
           `Nama   : ${order.name}\n` +
@@ -383,7 +383,7 @@ app.get("*", (req, res) => {
 // ─── Start ───────────────────────────────────────────────────
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
-  console.log(`\n🚀 AlzyFams Shop server running on port ${PORT}`);
+  console.log(`\n🚀 IANZYA Hub server running on port ${PORT}`);
   console.log(`   Local:   http://localhost:${PORT}`);
   console.log(`   Midtrans: ${MIDTRANS_IS_PRODUCTION ? "PRODUCTION" : "SANDBOX"} mode`);
   console.log(`   Webhook: ${APP_URL}/api/webhook\n`);
