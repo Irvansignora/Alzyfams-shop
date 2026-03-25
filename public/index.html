@@ -1212,7 +1212,7 @@ footer{background:var(--ink);padding:72px 60px 40px;}
           <li class="h">Prioritas antrian setup</li>
           <li class="h">Training admin via Zoom</li>
         </ul>
-        <button class="pc-cta cta-gold open-modal" data-product="bundle" data-name="Bundle Semua Produk" data-price="Rp 1.899k">🛒 Ambil Bundle Sekarang →</button>
+        <button class="pc-cta cta-gold open-modal" data-product="bundle_template" data-name="Bundle Semua Produk" data-price="Rp 1.899k">🛒 Ambil Bundle Sekarang →</button>
       </div>
     </div>
     <p class="price-note">💳 QRIS · GoPay · OVO · VA Bank · ShopeePay · Kartu Kredit &nbsp;·&nbsp; ⚡ Setup mulai 1×24 jam setelah bayar</p>
@@ -1775,13 +1775,13 @@ var HISTORY_KEY = 'ianzya_history';
 var PRICE_PER_USER = 50000;
 
 var PRODUCT_META = {
-  fnb:           { emoji:'☕', name:'Website UMKM F&B',           price:999000  },
-  distributor:   { emoji:'📦', name:'Website Distributor',         price:999000  },
-  bundle_template:{ emoji:'🎁', name:'Bundle 2 Website',           price:1499000 },
-  pos_basic:     { emoji:'🖥️', name:'Kasir POS — Basic',           price:499000  },
-  pos_pro:       { emoji:'🖥️', name:'Kasir POS — Pro',             price:999000  },
-  kasir:         { emoji:'🖥️', name:'Kasir POS Offline',           pricePerUser:50000 },
-  general:       { emoji:'🔥', name:'Produk IANZYA',             price:0       },
+  fnb:              { emoji:'☕', name:'Website UMKM F&B',              price:999000  },
+  distributor:      { emoji:'📦', name:'Website Distributor',            price:999000  },
+  bundle_template:  { emoji:'🎁', name:'Bundle 2 Website (F&B + Dist)', price:1499000 },
+  pos_basic:        { emoji:'🖥️', name:'Kasir POS Offline — Basic',     price:499000  },
+  pos_pro:          { emoji:'🖥️', name:'Kasir POS Offline — Pro',       price:999000  },
+  kasir:            { emoji:'🖥️', name:'Kasir POS Offline',             pricePerUser:50000 },
+  general:          { emoji:'🔥', name:'Produk IANZYA Hub',              price:0       },
 };
 
 function fmtRupiah(n){ return 'Rp '+parseInt(n).toLocaleString('id-ID'); }
@@ -2034,8 +2034,5 @@ function addToCartFromModal(){
 // ── Init ─────────────────────────────────────────────────
 updateBadge();
 </script>
-<!-- WhatsApp float button -->
-<a href="https://wa.me/6285776077292" class="wa-float" target="_blank" rel="noopener" aria-label="Chat WhatsApp">💬</a>
-<a href="#" id="back-top" title="Kembali ke atas">↑</a>
 </body>
 </html>
