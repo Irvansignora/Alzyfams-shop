@@ -4,19 +4,33 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <!-- ═══════════════════════════════════════════
-     GOOGLE ANALYTICS 4 (async — non-blocking)
+     GOOGLE ANALYTICS 4 (defer — non-blocking)
 ═══════════════════════════════════════════ -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-415JTG06X3"></script>
 <script>
+/* GA4 — defer until after first paint */
+window.addEventListener('load', function(){
+  var s = document.createElement('script');
+  s.async = true;
+  s.src = 'https://www.googletagmanager.com/gtag/js?id=G-415JTG06X3';
+  document.head.appendChild(s);
   window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
+  window.gtag = gtag;
   gtag('js', new Date());
   gtag('config', 'G-415JTG06X3');
+});
 </script>
-<title>Iranza Hub</title>
-<!-- Midtrans Snap.js — dimuat setelah halaman load agar tidak blocking render -->
+<!-- Midtrans Snap.js — dimuat HANYA saat user klik tombol bayar (on-demand) -->
 <script>
-window.addEventListener('load', function(){
+var _midtransLoaded = false;
+var _midtransLoading = false;
+var _midtransQueue = [];
+
+function loadMidtrans(callback) {
+  if (_midtransLoaded) { if(callback) callback(); return; }
+  if (callback) _midtransQueue.push(callback);
+  if (_midtransLoading) return;
+  _midtransLoading = true;
   fetch('/api/config')
     .then(function(r){ return r.json(); })
     .then(function(cfg){
@@ -24,11 +38,20 @@ window.addEventListener('load', function(){
       s.id  = 'midtrans-snap';
       s.src = cfg.snapUrl;
       s.setAttribute('data-client-key', cfg.clientKey);
-      s.onload = function(){ console.log('Midtrans Snap.js loaded. Client Key OK.'); };
+      s.onload = function(){
+        _midtransLoaded = true;
+        _midtransLoading = false;
+        console.log('Midtrans Snap.js loaded.');
+        _midtransQueue.forEach(function(fn){ fn(); });
+        _midtransQueue = [];
+      };
       document.head.appendChild(s);
     })
-    .catch(function(e){ console.error('Gagal load Midtrans config:', e); });
-});
+    .catch(function(e){
+      _midtransLoading = false;
+      console.error('Gagal load Midtrans config:', e);
+    });
+}
 </script>
 <!-- ═══════════════════════════════════════════
      SEO — TITLE & META CORE
@@ -335,8 +358,12 @@ window.addEventListener('load', function(){
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="dns-prefetch" href="https://res.cloudinary.com">
 <link rel="preconnect" href="https://res.cloudinary.com">
+<link rel="dns-prefetch" href="https://snap-assets.al-pc-id-p.cdn.gtflabs.io">
+<link rel="preconnect" href="https://snap-assets.al-pc-id-p.cdn.gtflabs.io" crossorigin>
 <!-- Preload Anton font — dipakai untuk LCP headline -->
 <link rel="preload" href="https://fonts.gstatic.com/s/anton/v25/1Ptgg87LROyAm3Kz-C8CSKlv.woff2" as="font" type="font/woff2" crossorigin>
+<!-- Preload Space Grotesk 400 (body font) -->
+<link rel="preload" href="https://fonts.gstatic.com/s/spacegrotesk/v16/V8mQoQDjQSkFtoMM3T6r8E7mF71Q-gozuPTPDg.woff2" as="font" type="font/woff2" crossorigin>
 <meta name="format-detection" content="telephone=no">
 <meta http-equiv="x-ua-compatible" content="ie=edge">
 <link rel="icon" type="image/png" href="https://res.cloudinary.com/dyhvx9wit/image/upload/v1774436218/iranza_favicon_kv1hdb.png">
@@ -363,7 +390,8 @@ body{background:var(--cream);color:var(--ink);font-family:'Space Grotesk',sans-s
 ::-webkit-scrollbar-thumb{background:var(--orange);border-radius:2px;}
 
 /* CURSOR */
-.cursor{position:fixed;width:14px;height:14px;border-radius:50%;background:var(--orange);pointer-events:none;z-index:9999;transform:translate(-50%,-50%);transition:width .2s,height .2s,background .2s;mix-blend-mode:multiply;}
+.cursor{position:fixed;width:14px;height:14px;border-radius:50%;background:var(--orange);pointer-events:none;z-index:9999;top:0;left:0;transform:translate(-50%,-50%);transition:width .2s,height .2s,background .2s;mix-blend-mode:multiply;will-change:transform;}
+.cursor.big{width:50px;height:50px;background:var(--gold);}
 .cursor.big{width:50px;height:50px;background:var(--gold);}
 
 /* PROGRESS BAR */
@@ -750,9 +778,13 @@ footer{background:var(--ink);padding:0;}
   .mq-item{font-size:16px;padding:0 20px;}
 }
 
-/* NAV logo image sizing */
-.nav-logo-img{height:36px;width:auto;display:block;}
+/* ── PERFORMANCE: explicit aspect-ratio on img wrappers to prevent CLS ── */
+.nav-logo-img{height:36px;width:auto;display:block;aspect-ratio:175/70;}
 @media(max-width:600px){.nav-logo-img{height:28px;}}
+.ls-logo-img-wrap img{aspect-ratio:175/70;}
+.tb-iframe-wrap{aspect-ratio:800/280;}
+/* Prevent CLS from footer logo */
+.f-logo img{height:65px;width:auto;aspect-ratio:163/65;}
 
 /* STATS mobile - already handled but improve */
 @media(max-width:480px){
@@ -968,7 +1000,7 @@ body{overflow-x:hidden;}
 .pch-link-gold{color:var(--gold);border-bottom:2px solid var(--gold);}
 
 /* ── CURSOR TRAIL ── */
-.cursor-trail{position:fixed;width:7px;height:7px;border-radius:50%;pointer-events:none;z-index:9997;transform:translate(-50%,-50%);}
+.cursor-trail{position:fixed;width:7px;height:7px;border-radius:50%;pointer-events:none;z-index:9997;top:0;left:0;transform:translate(-50%,-50%);will-change:transform;}
 
 /* ── PAYMENT METHOD HOVER ── */
 .pm-item{background:#fff;border:2.5px solid var(--ink);border-radius:12px;padding:20px 30px;display:flex;flex-direction:column;align-items:center;gap:8px;transition:all .3s cubic-bezier(.22,1,.36,1);cursor:default;}
@@ -1243,7 +1275,7 @@ body{overflow-x:hidden;}
   <div class="ls-center">
     <!-- Logo image -->
     <div class="ls-logo-img-wrap">
-      <img src="https://res.cloudinary.com/dyhvx9wit/image/upload/h_70,q_auto,f_auto/iranza_vlnnlu.png" alt="IRANZA" decoding="async" loading="eager">
+      <img src="https://res.cloudinary.com/dyhvx9wit/image/upload/h_70,q_auto,f_auto/iranza_vlnnlu.png" alt="IRANZA" width="175" height="70" decoding="async" loading="eager">
     </div>
 
     <!-- Spinning rings -->
@@ -1282,6 +1314,7 @@ body{overflow-x:hidden;}
       src="https://res.cloudinary.com/dyhvx9wit/image/upload/h_70,q_auto,f_auto/iranza_vlnnlu.png" 
       alt="IRANZA Logo" 
       class="nav-logo-img"
+      width="175" height="70"
       fetchpriority="high"
       decoding="sync"
     />
@@ -1523,6 +1556,7 @@ body{overflow-x:hidden;}
             <img 
               src="https://res.cloudinary.com/dyhvx9wit/image/upload/h_65,q_auto,f_auto/iranza_vlnnlu.png" 
               alt="IRANZA Logo"
+              width="163" height="65"
               loading="lazy"
               decoding="async"
             />
@@ -1531,7 +1565,7 @@ body{overflow-x:hidden;}
         </div>
         <div class="f-links">
           <div class="f-col"><h4>Produk</h4><a href="#" onclick="showPage('produk');return false;">Website UMKM</a><a href="#" onclick="showPage('produk');return false;">Website Distributor</a><a href="#" onclick="showPage('produk');return false;">Kasir POS</a><a href="#" onclick="showPage('produk');return false;">Website Custom</a></div>
-          <div class="f-col"><h4>Demo</h4><a href="https://hulyaapparel.com/" target="_blank">Demo UMKM ↗</a><a href="https://distributor-snack.vercel.app/" target="_blank">Demo Distributor ↗</a><a href="https://irvansignora.github.io/Kasir-Offline/" target="_blank">Demo Kasir ↗</a></div>
+          <div class="f-col"><h4>Demo</h4><a href="https://hulyaapparel.com/" target="_blank">Demo UMKM ↗</a><a href="https://distributor-snack.vercel.app/" target="_blank">Demo Distributor ↗</a><a href="https://demo-pos.iranza.com/" target="_blank">Demo Kasir ↗</a></div>
           <div class="f-col"><h4>Kontak</h4><a href="https://wa.me/6285776077292" target="_blank">WhatsApp ↗</a><a href="#" onclick="showPage('kontak');return false;">Kontak Kami</a></div>
         </div>
       </div>
@@ -1597,6 +1631,7 @@ body{overflow-x:hidden;}
               src="https://res.cloudinary.com/dyhvx9wit/image/upload/q_auto,f_auto,w_800/iranza_umkm_preview.jpg" 
               onerror="this.style.display='none';this.nextElementSibling.style.display='flex';"
               alt="Preview Website UMKM All-in-One" 
+              width="800" height="280"
               style="width:100%;height:100%;object-fit:cover;object-position:top;"
               loading="lazy" decoding="async"
             >
@@ -1694,6 +1729,7 @@ body{overflow-x:hidden;}
               src="https://res.cloudinary.com/dyhvx9wit/image/upload/q_auto,f_auto,w_800/iranza_distributor_preview.jpg" 
               onerror="this.style.display='none';this.nextElementSibling.style.display='flex';"
               alt="Preview Website Distributor 3-in-1" 
+              width="800" height="280"
               style="width:100%;height:100%;object-fit:cover;object-position:top;"
               loading="lazy" decoding="async"
             >
@@ -1734,6 +1770,7 @@ body{overflow-x:hidden;}
               src="https://res.cloudinary.com/dyhvx9wit/image/upload/q_auto,f_auto,w_800/iranza_kasir_preview.jpg" 
               onerror="this.style.display='none';this.nextElementSibling.style.display='flex';"
               alt="Preview Kasir POS Offline" 
+              width="800" height="280"
               style="width:100%;height:100%;object-fit:cover;object-position:top;"
               loading="lazy" decoding="async"
             >
@@ -1754,7 +1791,7 @@ body{overflow-x:hidden;}
                   <div style="height:28px;background:#6B3FA0;border-radius:6px;width:60%;"></div>
                 </div>
               </div>
-              <div style="font-size:11px;color:rgba(26,20,8,.4);font-weight:700;letter-spacing:1px;">irvansignora.github.io/Kasir-Offline</div>
+              <div style="font-size:11px;color:rgba(26,20,8,.4);font-weight:700;letter-spacing:1px;">demo-pos.iranza.com</div>
             </div>
           </div>
         </div>
@@ -1778,7 +1815,7 @@ body{overflow-x:hidden;}
             <div class="tb-price" style="color:var(--purple)">Rp 50k<span class="tb-price-badge" style="background:var(--purple)">/USER</span></div>
             <div class="tb-price-sub">Per pengguna · Akses selamanya</div>
           </div>
-          <a href="https://irvansignora.github.io/Kasir-Offline/" target="_blank" class="btn-demo-link">Demo ↗</a>
+          <a href="https://demo-pos.iranza.com/" target="_blank" class="btn-demo-link">Demo ↗</a>
           <button class="btn-order-now btn-on-purple open-modal" data-product="kasir" data-name="Kasir POS Offline" data-price="Rp 50k/User">Pesan →</button>
         </div>
       </div>
@@ -1901,12 +1938,12 @@ body{overflow-x:hidden;}
       <div class="kasir-demo-frame">
         <div class="kasir-demo-bar">
           <div class="tbd tbd-r"></div><div class="tbd tbd-y"></div><div class="tbd tbd-g"></div>
-          <div class="kasir-demo-url">https://irvansignora.github.io/Kasir-Offline/</div>
+          <div class="kasir-demo-url">https://demo-pos.iranza.com/</div>
         </div>
-        <iframe class="kasir-demo-iframe" src="https://irvansignora.github.io/Kasir-Offline/" title="Demo Kasir POS Live" sandbox="allow-scripts allow-same-origin allow-forms" loading="lazy"></iframe>
+        <iframe class="kasir-demo-iframe" src="https://demo-pos.iranza.com/" title="Demo Kasir POS Live" sandbox="allow-scripts allow-same-origin allow-forms" loading="lazy"></iframe>
       </div>
       <div style="margin-top:28px;">
-        <a href="https://irvansignora.github.io/Kasir-Offline/" target="_blank" style="display:inline-flex;align-items:center;gap:8px;padding:14px 32px;background:var(--purple);color:#fff;border-radius:100px;font-weight:700;text-decoration:none;font-size:14px;transition:all .25s;" onmouseenter="this.style.transform='translateY(-2px)';this.style.boxShadow='0 12px 32px rgba(107,63,160,.5)'" onmouseleave="this.style.transform='';this.style.boxShadow=''">
+        <a href="https://demo-pos.iranza.com/" target="_blank" style="display:inline-flex;align-items:center;gap:8px;padding:14px 32px;background:var(--purple);color:#fff;border-radius:100px;font-weight:700;text-decoration:none;font-size:14px;transition:all .25s;" onmouseenter="this.style.transform='translateY(-2px)';this.style.boxShadow='0 12px 32px rgba(107,63,160,.5)'" onmouseleave="this.style.transform='';this.style.boxShadow=''">
           Buka di Tab Baru ↗
         </a>
         <button class="btn-order-now btn-on-purple open-modal" style="margin-left:12px;" data-product="kasir" data-name="Kasir POS Offline" data-price="Rp 50k/User">🛒 Beli Sekarang — Rp 50k/User</button>
@@ -1953,7 +1990,7 @@ body{overflow-x:hidden;}
         </div>
         <div class="f-links">
           <div class="f-col"><h4>Produk</h4><a href="#" onclick="showPage('produk');return false;">Website UMKM</a><a href="#" onclick="showPage('produk');return false;">Website Distributor</a><a href="#" onclick="showPage('produk');return false;">Kasir POS</a><a href="#" onclick="showPage('produk');return false;">Website Custom</a></div>
-          <div class="f-col"><h4>Demo</h4><a href="https://hulyaapparel.com/" target="_blank">Demo UMKM ↗</a><a href="https://distributor-snack.vercel.app/" target="_blank">Demo Distributor ↗</a><a href="https://irvansignora.github.io/Kasir-Offline/" target="_blank">Demo Kasir ↗</a></div>
+          <div class="f-col"><h4>Demo</h4><a href="https://hulyaapparel.com/" target="_blank">Demo UMKM ↗</a><a href="https://distributor-snack.vercel.app/" target="_blank">Demo Distributor ↗</a><a href="https://demo-pos.iranza.com/" target="_blank">Demo Kasir ↗</a></div>
           <div class="f-col"><h4>Kontak</h4><a href="https://wa.me/6285776077292" target="_blank">WhatsApp ↗</a><a href="#" onclick="showPage('kontak');return false;">Kontak Kami</a></div>
         </div>
       </div>
@@ -2138,7 +2175,7 @@ body{overflow-x:hidden;}
         </div>
         <div class="f-links">
           <div class="f-col"><h4>Produk</h4><a href="#" onclick="showPage('produk');return false;">Website UMKM</a><a href="#" onclick="showPage('produk');return false;">Website Distributor</a><a href="#" onclick="showPage('produk');return false;">Kasir POS</a><a href="#" onclick="showPage('produk');return false;">Website Custom</a></div>
-          <div class="f-col"><h4>Demo</h4><a href="https://hulyaapparel.com/" target="_blank">Demo UMKM ↗</a><a href="https://distributor-snack.vercel.app/" target="_blank">Demo Distributor ↗</a><a href="https://irvansignora.github.io/Kasir-Offline/" target="_blank">Demo Kasir ↗</a></div>
+          <div class="f-col"><h4>Demo</h4><a href="https://hulyaapparel.com/" target="_blank">Demo UMKM ↗</a><a href="https://distributor-snack.vercel.app/" target="_blank">Demo Distributor ↗</a><a href="https://demo-pos.iranza.com/" target="_blank">Demo Kasir ↗</a></div>
           <div class="f-col"><h4>Kontak</h4><a href="https://wa.me/6285776077292" target="_blank">WhatsApp ↗</a><a href="#" onclick="showPage('kontak');return false;">Kontak Kami</a></div>
         </div>
       </div>
@@ -2214,7 +2251,7 @@ body{overflow-x:hidden;}
         </div>
         <div class="f-links">
           <div class="f-col"><h4>Produk</h4><a href="#" onclick="showPage('produk');return false;">Website UMKM</a><a href="#" onclick="showPage('produk');return false;">Website Distributor</a><a href="#" onclick="showPage('produk');return false;">Kasir POS</a><a href="#" onclick="showPage('produk');return false;">Website Custom</a></div>
-          <div class="f-col"><h4>Demo</h4><a href="https://hulyaapparel.com/" target="_blank">Demo UMKM ↗</a><a href="https://distributor-snack.vercel.app/" target="_blank">Demo Distributor ↗</a><a href="https://irvansignora.github.io/Kasir-Offline/" target="_blank">Demo Kasir ↗</a></div>
+          <div class="f-col"><h4>Demo</h4><a href="https://hulyaapparel.com/" target="_blank">Demo UMKM ↗</a><a href="https://distributor-snack.vercel.app/" target="_blank">Demo Distributor ↗</a><a href="https://demo-pos.iranza.com/" target="_blank">Demo Kasir ↗</a></div>
           <div class="f-col"><h4>Kontak</h4><a href="https://wa.me/6285776077292" target="_blank">WhatsApp ↗</a></div>
         </div>
       </div>
@@ -2311,7 +2348,7 @@ body{overflow-x:hidden;}
         </div>
         <div class="f-links">
           <div class="f-col"><h4>Produk</h4><a href="#" onclick="showPage('produk');return false;">Website UMKM</a><a href="#" onclick="showPage('produk');return false;">Website Distributor</a><a href="#" onclick="showPage('produk');return false;">Kasir POS</a><a href="#" onclick="showPage('produk');return false;">Website Custom</a></div>
-          <div class="f-col"><h4>Demo</h4><a href="https://hulyaapparel.com/" target="_blank">Demo UMKM ↗</a><a href="https://distributor-snack.vercel.app/" target="_blank">Demo Distributor ↗</a><a href="https://irvansignora.github.io/Kasir-Offline/" target="_blank">Demo Kasir ↗</a></div>
+          <div class="f-col"><h4>Demo</h4><a href="https://hulyaapparel.com/" target="_blank">Demo UMKM ↗</a><a href="https://distributor-snack.vercel.app/" target="_blank">Demo Distributor ↗</a><a href="https://demo-pos.iranza.com/" target="_blank">Demo Kasir ↗</a></div>
           <div class="f-col"><h4>Info</h4><a href="https://wa.me/6285776077292" target="_blank">WhatsApp ↗</a><a href="#" onclick="showPage('tentang');return false;">Tentang Kami</a></div>
         </div>
       </div>
@@ -2436,7 +2473,7 @@ body{overflow-x:hidden;}
   </div>
 </div>
 
-<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js" defer></script><script>
 // ── PAGE NAVIGATION ──
 var currentPage = 'home';
 var _pageTransitioning = false;
@@ -2486,13 +2523,21 @@ function closeMobileMenu(){
   document.body.style.overflow = '';
 }
 
-// ── CURSOR ──
+// ── CURSOR — batched RAF to avoid forced reflow ──
 var cur = document.getElementById('cursor');
-document.addEventListener('mousemove',function(e){
-  cur.style.left=e.clientX+'px';cur.style.top=e.clientY+'px';
+var _curX = 0, _curY = 0, _curRaf = false;
+document.addEventListener('mousemove', function(e){
+  _curX = e.clientX; _curY = e.clientY;
+  if(!_curRaf){
+    _curRaf = true;
+    requestAnimationFrame(function(){
+      cur.style.transform = 'translate(calc(-50% + '+_curX+'px), calc(-50% + '+_curY+'px))';
+      _curRaf = false;
+    });
+  }
 });
 
-// ── CURSOR TRAIL (desktop only) ──
+// ── CURSOR TRAIL (desktop only) — RAF batched, no forced reflow ──
 var trailColors=['var(--orange)','var(--gold)','var(--teal)','var(--rose)'];
 var trails=[];
 if(window.matchMedia('(hover: hover) and (pointer: fine)').matches){
@@ -2502,6 +2547,7 @@ for(var ti=0;ti<6;ti++){
   td.style.background=trailColors[ti%trailColors.length];
   td.style.opacity=((6-ti)/6*0.45)+'';
   td.style.width=(8-ti)+'px';td.style.height=(8-ti)+'px';
+  td.style.top='0';td.style.left='0';
   document.body.appendChild(td);
   trails.push({el:td,x:0,y:0});
 }
@@ -2512,8 +2558,9 @@ document.addEventListener('mousemove',function(e){mouseX=e.clientX;mouseY=e.clie
     var prev=i===0?{x:mouseX,y:mouseY}:trails[i-1];
     t.x+=(prev.x-t.x)*0.35;
     t.y+=(prev.y-t.y)*0.35;
-    t.el.style.left=t.x+'px';
-    t.el.style.top=t.y+'px';
+  });
+  trails.forEach(function(t){
+    t.el.style.transform='translate(calc(-50% + '+t.x+'px),calc(-50% + '+t.y+'px))';
   });
   requestAnimationFrame(animTrail);
 })();
@@ -2728,7 +2775,6 @@ function submitOrder(){
   if(!name||!email||!wa){alert('Nama, email, dan nomor WhatsApp wajib diisi!');return;}
 
   var productKey=modalProductData.product;
-  // kasir: tetap kirim sebagai 'kasir', server hitung harga per user
   var usersEl=document.getElementById('order-users');
   var users=(productKey==='kasir'&&usersEl&&usersEl.value!=='custom')?parseInt(usersEl.value)||1:1;
   if(productKey==='kasir'&&usersEl&&usersEl.value==='custom'){
@@ -2759,7 +2805,6 @@ function submitOrder(){
       return;
     }
     closeModal();
-    // Simpan sebagai pending dulu ke riwayat lokal
     var pendingEntry = {
       orderId: data.orderId || data.order_id || ('ORD-'+Date.now()),
       product: productKey,
@@ -2775,38 +2820,43 @@ function submitOrder(){
     };
     addRiwayat(pendingEntry);
 
-    // Buka Midtrans Snap popup
+    /* Load Midtrans on-demand — hanya saat user benar-benar bayar */
+    function doSnap(){
+      if(window.snap){
+        window.snap.pay(data.snapToken,{
+          onSuccess: function(result){
+            var list=getRiwayat();
+            for(var i=0;i<list.length;i++){
+              if(list[i].orderId===pendingEntry.orderId){list[i].status='success';break;}
+            }
+            saveRiwayat(list);
+            window.location.href='/success.html?order_id='+result.order_id;
+          },
+          onPending: function(result){
+            window.location.href='/success.html?order_id='+result.order_id;
+          },
+          onError: function(result){
+            var list=getRiwayat();
+            for(var i=0;i<list.length;i++){
+              if(list[i].orderId===pendingEntry.orderId){list[i].status='failed';break;}
+            }
+            saveRiwayat(list);
+            alert('Pembayaran gagal. Silakan coba lagi.');
+            console.error('Midtrans error:',result);
+          },
+          onClose: function(){
+            console.log('Popup Midtrans ditutup oleh user.');
+          }
+        });
+      } else {
+        window.location.href=data.redirectUrl;
+      }
+    }
+
     if(window.snap){
-      window.snap.pay(data.snapToken,{
-        onSuccess: function(result){
-          // Update status jadi success
-          var list=getRiwayat();
-          for(var i=0;i<list.length;i++){
-            if(list[i].orderId===pendingEntry.orderId){list[i].status='success';break;}
-          }
-          saveRiwayat(list);
-          window.location.href='/success.html?order_id='+result.order_id;
-        },
-        onPending: function(result){
-          window.location.href='/success.html?order_id='+result.order_id;
-        },
-        onError: function(result){
-          // Update status jadi failed
-          var list=getRiwayat();
-          for(var i=0;i<list.length;i++){
-            if(list[i].orderId===pendingEntry.orderId){list[i].status='failed';break;}
-          }
-          saveRiwayat(list);
-          alert('Pembayaran gagal. Silakan coba lagi.');
-          console.error('Midtrans error:',result);
-        },
-        onClose: function(){
-          console.log('Popup Midtrans ditutup oleh user.');
-        }
-      });
+      doSnap();
     } else {
-      // Fallback: redirect ke Midtrans hosted page
-      window.location.href=data.redirectUrl;
+      loadMidtrans(doSnap);
     }
   })
   .catch(function(err){
@@ -2869,6 +2919,8 @@ function lanjutBayar(orderId){
 
   if(window.snap && item.snapToken){
     doSnap(item.snapToken);
+  } else if(!window.snap && item.snapToken){
+    loadMidtrans(function(){ doSnap(item.snapToken); });
   } else if(item.redirectUrl){
     window.location.href = item.redirectUrl;
   } else {
@@ -3120,4 +3172,23 @@ window.showPage = function(page){
     </ul>
 
     <h2>Metode Pembayaran</h2>
-    <p>QRIS, GoPay, OVO, ShopeeP
+    <p>Iranza Hub menerima pembayaran via QRIS, GoPay, OVO, ShopeePay, Dana, dan Transfer Bank (Virtual Account). Semua transaksi diproses aman melalui Midtrans.</p>
+
+    <h2>Cara Pemesanan di Iranza Hub</h2>
+    <p>Pilih produk yang diinginkan, klik tombol Pesan Sekarang, isi form nama, email, dan nomor WhatsApp, lalu selesaikan pembayaran via Midtrans. Setup akan dimulai dalam 1×24 jam dan selesai dalam 4–8 jam kerja.</p>
+
+    <h2>Jenis Bisnis yang Cocok</h2>
+    <p>Iranza Hub melayani semua jenis UMKM: kuliner, F&amp;B, warung makan, kafe, food stall, fashion, baju, batik, beauty, skincare, kosmetik, aksesoris, toko kelontong, produk handmade, kerajinan tangan, distributor, dan jasa. Template website tersedia untuk semua kategori usaha tersebut.</p>
+
+    <h2>Keunggulan Dibanding Kompetitor</h2>
+    <p>Dibanding platform website builder berbayar bulanan, Iranza Hub menawarkan bayar sekali tanpa subscription. Dibanding freelancer, setup lebih cepat (4–8 jam) dengan harga lebih terjangkau. Semua produk sudah terintegrasi sistem pembayaran online dan siap digunakan tanpa perlu keahlian teknis.</p>
+
+    <h2>Garansi dan Support</h2>
+    <p>Setiap pembelian dilengkapi garansi support WhatsApp 30 hari (60 hari untuk paket bundle). Jika ada masalah teknis setelah setup, tim Iranza siap membantu tanpa biaya tambahan.</p>
+
+    <h2>Kontak Iranza Hub</h2>
+    <p>Hubungi Iranza Hub melalui WhatsApp di nomor +62-857-7607-7292. Konsultasi gratis, tanpa pressure. Tim siap membantu 24/7 setiap hari.</p>
+  </section>
+</article>
+</body>
+</html>
