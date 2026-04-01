@@ -1,8 +1,10 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <!-- ═══════════════════════════════════════════
-     GOOGLE ANALYTICS 4
+     GOOGLE ANALYTICS 4 (async — non-blocking)
 ═══════════════════════════════════════════ -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-415JTG06X3"></script>
 <script>
@@ -11,8 +13,6 @@
   gtag('js', new Date());
   gtag('config', 'G-415JTG06X3');
 </script>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Iranza Hub</title>
 <!-- Midtrans Snap.js — dimuat setelah halaman load agar tidak blocking render -->
 <script>
@@ -335,6 +335,8 @@ window.addEventListener('load', function(){
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="dns-prefetch" href="https://res.cloudinary.com">
 <link rel="preconnect" href="https://res.cloudinary.com">
+<!-- Preload Anton font — dipakai untuk LCP headline -->
+<link rel="preload" href="https://fonts.gstatic.com/s/anton/v25/1Ptgg87LROyAm3Kz-C8CSKlv.woff2" as="font" type="font/woff2" crossorigin>
 <meta name="format-detection" content="telephone=no">
 <meta http-equiv="x-ua-compatible" content="ie=edge">
 <link rel="icon" type="image/png" href="https://res.cloudinary.com/dyhvx9wit/image/upload/v1774436218/iranza_favicon_kv1hdb.png">
@@ -935,9 +937,13 @@ body{overflow-x:hidden;}
 /* PERFORMANCE: Use GPU layer for animated elements */
 .marquee-strip .mq { will-change: transform; }
 .float-obj { will-change: transform; }
-/* PERFORMANCE: Reduce marquee count on mobile */
-@media (max-width: 600px) {
-  .mq-item:nth-child(n+5) { display: none; }
+/* PERFORMANCE: Disable expensive animations on mobile */
+@media(max-width:768px){
+  .float-obj{animation:none !important;}
+  .cloud{animation:none !important;}
+  .sticker{animation:none !important;}
+  .marquee-strip .mq{animation-duration:35s !important;}
+  .ls-ring1,.ls-ring2,.ls-ring3{animation-duration:2s,3s,4s;}
 }
 
 
@@ -1103,6 +1109,8 @@ body{overflow-x:hidden;}
   position:absolute;border-radius:50%;filter:blur(80px);pointer-events:none;
   animation:ls-orb-pulse ease-in-out infinite alternate;
 }
+/* Disable heavy blur orbs on mobile */
+@media(max-width:768px){.ls-orb{display:none;}}
 .ls-orb1{width:500px;height:500px;background:radial-gradient(circle,rgba(255,91,30,.35),transparent 70%);top:-15%;left:-10%;animation-duration:4s;}
 .ls-orb2{width:400px;height:400px;background:radial-gradient(circle,rgba(0,168,150,.25),transparent 70%);bottom:-10%;right:-5%;animation-duration:5s;animation-delay:.8s;}
 .ls-orb3{width:300px;height:300px;background:radial-gradient(circle,rgba(242,183,5,.2),transparent 70%);top:40%;left:40%;animation-duration:3.5s;animation-delay:.4s;}
@@ -1584,8 +1592,35 @@ body{overflow-x:hidden;}
             <div class="tbd tbd-r"></div><div class="tbd tbd-y"></div><div class="tbd tbd-g"></div>
             <div class="tb-addr"></div>
           </div>
-          <div class="tb-iframe-wrap">
-            <iframe class="tb-screen-iframe" src="https://hulyaapparel.com/" title="Demo UMKM Website" sandbox="allow-scripts allow-same-origin" loading="lazy"></iframe>
+          <div class="tb-iframe-wrap" style="position:relative;overflow:hidden;">
+            <img 
+              src="https://res.cloudinary.com/dyhvx9wit/image/upload/q_auto,f_auto,w_800/iranza_umkm_preview.jpg" 
+              onerror="this.style.display='none';this.nextElementSibling.style.display='flex';"
+              alt="Preview Website UMKM All-in-One" 
+              style="width:100%;height:100%;object-fit:cover;object-position:top;"
+              loading="lazy" decoding="async"
+            >
+            <!-- Fallback preview card jika gambar belum diupload -->
+            <div style="display:none;width:100%;height:100%;background:linear-gradient(135deg,#FFF5E8,#FFE0C0);align-items:center;justify-content:center;flex-direction:column;gap:12px;font-family:'Space Grotesk',sans-serif;">
+              <div style="width:80%;background:#fff;border-radius:12px;box-shadow:0 8px 32px rgba(0,0,0,.12);overflow:hidden;">
+                <div style="background:#F0EBE0;padding:8px 12px;display:flex;gap:5px;align-items:center;">
+                  <div style="width:8px;height:8px;border-radius:50%;background:#FF5F57;"></div>
+                  <div style="width:8px;height:8px;border-radius:50%;background:#FEBC2E;"></div>
+                  <div style="width:8px;height:8px;border-radius:50%;background:#28C840;"></div>
+                  <div style="flex:1;background:rgba(0,0,0,.08);border-radius:3px;height:10px;margin-left:6px;"></div>
+                </div>
+                <div style="padding:16px;display:flex;gap:10px;">
+                  <div style="width:35%;background:#FF5B1E;border-radius:6px;height:80px;"></div>
+                  <div style="flex:1;display:flex;flex-direction:column;gap:6px;">
+                    <div style="height:10px;background:rgba(0,0,0,.1);border-radius:3px;width:80%;"></div>
+                    <div style="height:8px;background:rgba(0,0,0,.06);border-radius:3px;width:60%;"></div>
+                    <div style="height:8px;background:rgba(0,0,0,.06);border-radius:3px;width:90%;margin-top:4px;"></div>
+                    <div style="height:24px;background:#FF5B1E;border-radius:20px;width:50%;margin-top:6px;"></div>
+                  </div>
+                </div>
+              </div>
+              <div style="font-size:11px;color:rgba(26,20,8,.4);font-weight:700;letter-spacing:1px;">hulyaapparel.com</div>
+            </div>
           </div>
         </div>
       </div>
@@ -1654,8 +1689,30 @@ body{overflow-x:hidden;}
             <div class="tbd tbd-r"></div><div class="tbd tbd-y"></div><div class="tbd tbd-g"></div>
             <div class="tb-addr"></div>
           </div>
-          <div class="tb-iframe-wrap teal-bg">
-            <iframe class="tb-screen-iframe" src="https://distributor-snack.vercel.app/" title="Demo Distributor" sandbox="allow-scripts allow-same-origin" loading="lazy"></iframe>
+          <div class="tb-iframe-wrap teal-bg" style="position:relative;overflow:hidden;">
+            <img 
+              src="https://res.cloudinary.com/dyhvx9wit/image/upload/q_auto,f_auto,w_800/iranza_distributor_preview.jpg" 
+              onerror="this.style.display='none';this.nextElementSibling.style.display='flex';"
+              alt="Preview Website Distributor 3-in-1" 
+              style="width:100%;height:100%;object-fit:cover;object-position:top;"
+              loading="lazy" decoding="async"
+            >
+            <div style="display:none;width:100%;height:100%;background:linear-gradient(135deg,#E8FBF8,#B8F0EA);align-items:center;justify-content:center;flex-direction:column;gap:12px;font-family:'Space Grotesk',sans-serif;">
+              <div style="width:80%;background:#fff;border-radius:12px;box-shadow:0 8px 32px rgba(0,0,0,.12);overflow:hidden;">
+                <div style="background:#F0EBE0;padding:8px 12px;display:flex;gap:5px;align-items:center;">
+                  <div style="width:8px;height:8px;border-radius:50%;background:#FF5F57;"></div>
+                  <div style="width:8px;height:8px;border-radius:50%;background:#FEBC2E;"></div>
+                  <div style="width:8px;height:8px;border-radius:50%;background:#28C840;"></div>
+                  <div style="flex:1;background:rgba(0,0,0,.08);border-radius:3px;height:10px;margin-left:6px;"></div>
+                </div>
+                <div style="padding:16px;display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;">
+                  <div style="background:#00A896;border-radius:6px;height:60px;"></div>
+                  <div style="background:rgba(0,168,150,.3);border-radius:6px;height:60px;"></div>
+                  <div style="background:rgba(0,168,150,.15);border-radius:6px;height:60px;"></div>
+                </div>
+              </div>
+              <div style="font-size:11px;color:rgba(26,20,8,.4);font-weight:700;letter-spacing:1px;">distributor-snack.vercel.app</div>
+            </div>
           </div>
         </div>
       </div>
@@ -1672,8 +1729,33 @@ body{overflow-x:hidden;}
             <div class="tbd tbd-r"></div><div class="tbd tbd-y"></div><div class="tbd tbd-g"></div>
             <div class="tb-addr"></div>
           </div>
-          <div class="tb-iframe-wrap purple-bg">
-            <iframe class="tb-screen-iframe" src="https://irvansignora.github.io/Kasir-Offline/" title="Demo Kasir POS" sandbox="allow-scripts allow-same-origin" loading="lazy"></iframe>
+          <div class="tb-iframe-wrap purple-bg" style="position:relative;overflow:hidden;">
+            <img 
+              src="https://res.cloudinary.com/dyhvx9wit/image/upload/q_auto,f_auto,w_800/iranza_kasir_preview.jpg" 
+              onerror="this.style.display='none';this.nextElementSibling.style.display='flex';"
+              alt="Preview Kasir POS Offline" 
+              style="width:100%;height:100%;object-fit:cover;object-position:top;"
+              loading="lazy" decoding="async"
+            >
+            <div style="display:none;width:100%;height:100%;background:linear-gradient(135deg,#F0E8FF,#D8C0FF);align-items:center;justify-content:center;flex-direction:column;gap:12px;font-family:'Space Grotesk',sans-serif;">
+              <div style="width:80%;background:#fff;border-radius:12px;box-shadow:0 8px 32px rgba(0,0,0,.12);overflow:hidden;">
+                <div style="background:#F0EBE0;padding:8px 12px;display:flex;gap:5px;align-items:center;">
+                  <div style="width:8px;height:8px;border-radius:50%;background:#FF5F57;"></div>
+                  <div style="width:8px;height:8px;border-radius:50%;background:#FEBC2E;"></div>
+                  <div style="width:8px;height:8px;border-radius:50%;background:#28C840;"></div>
+                  <div style="flex:1;background:rgba(0,0,0,.08);border-radius:3px;height:10px;margin-left:6px;"></div>
+                </div>
+                <div style="padding:16px;display:flex;flex-direction:column;gap:8px;">
+                  <div style="display:flex;gap:8px;">
+                    <div style="flex:1;background:#6B3FA0;border-radius:6px;height:36px;"></div>
+                    <div style="flex:1;background:rgba(107,63,160,.3);border-radius:6px;height:36px;"></div>
+                    <div style="flex:1;background:rgba(107,63,160,.15);border-radius:6px;height:36px;"></div>
+                  </div>
+                  <div style="height:28px;background:#6B3FA0;border-radius:6px;width:60%;"></div>
+                </div>
+              </div>
+              <div style="font-size:11px;color:rgba(26,20,8,.4);font-weight:700;letter-spacing:1px;">irvansignora.github.io/Kasir-Offline</div>
+            </div>
           </div>
         </div>
       </div>
@@ -2170,11 +2252,11 @@ body{overflow-x:hidden;}
               <div style="font-size:12px;opacity:.6;">+62 857-7607-7292 · Respon cepat!</div>
             </div>
           </a>
-          <a href="/cdn-cgi/l/email-protection#88e0ede4e4e7c8e1fae9e6f2e9a6ebe7e5" style="display:flex;align-items:center;gap:16px;padding:20px 24px;background:var(--sand);color:var(--ink);text-decoration:none;border-radius:4px;border:2.5px solid var(--ink);transition:all .25s;" onmouseenter="this.style.background='var(--gold)'" onmouseleave="this.style.background='var(--sand)'">
+          <a href="/cdn-cgi/l/email-protection#2a43584b44504b1e1b1b6a4d474b434604494547" style="display:flex;align-items:center;gap:16px;padding:20px 24px;background:var(--sand);color:var(--ink);text-decoration:none;border-radius:4px;border:2.5px solid var(--ink);transition:all .25s;" onmouseenter="this.style.background='var(--gold)'" onmouseleave="this.style.background='var(--sand)'">
             <span style="font-size:32px;">📧</span>
             <div>
               <div style="font-weight:800;font-size:14px;letter-spacing:.5px;">Email</div>
-              <div style="font-size:12px;opacity:.6;"><span class="__cf_email__" data-cfemail="deb6bbb2b2b19eb7acbfb0a4bff0bdb1b3">[email&#160;protected]</span></div>
+              <div style="font-size:12px;opacity:.6;"><span class="__cf_email__" data-cfemail="28415a494652491c1919684f45494144064b4745">[email&#160;protected]</span></div>
             </div>
           </a>
           <div style="display:flex;align-items:center;gap:16px;padding:20px 24px;background:var(--sky);color:var(--ink);border-radius:4px;border:2.5px solid var(--ink);">
@@ -2354,7 +2436,7 @@ body{overflow-x:hidden;}
   </div>
 </div>
 
-<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
 // ── PAGE NAVIGATION ──
 var currentPage = 'home';
 var _pageTransitioning = false;
@@ -2410,9 +2492,10 @@ document.addEventListener('mousemove',function(e){
   cur.style.left=e.clientX+'px';cur.style.top=e.clientY+'px';
 });
 
-// ── CURSOR TRAIL ──
+// ── CURSOR TRAIL (desktop only) ──
 var trailColors=['var(--orange)','var(--gold)','var(--teal)','var(--rose)'];
 var trails=[];
+if(window.matchMedia('(hover: hover) and (pointer: fine)').matches){
 for(var ti=0;ti<6;ti++){
   var td=document.createElement('div');
   td.className='cursor-trail';
@@ -2434,20 +2517,41 @@ document.addEventListener('mousemove',function(e){mouseX=e.clientX;mouseY=e.clie
   });
   requestAnimationFrame(animTrail);
 })();
+}
 document.querySelectorAll('a,button,.tb-pill,.sticker,.nav-cta,.pc-cta').forEach(function(el){
   el.addEventListener('mouseenter',function(){cur.classList.add('big');});
   el.addEventListener('mouseleave',function(){cur.classList.remove('big');});
 });
 
-// ── DYNAMIC COPYRIGHT YEAR ──
-document.querySelectorAll('.yr-copy').forEach(function(el){ el.textContent = new Date().getFullYear(); });
+// ── KONTAK FORM — KIRIM VIA WHATSAPP ──
+function sendWhatsApp(){
+  var form = document.querySelector('#page-kontak .rv-r');
+  var inputs = form ? form.querySelectorAll('input, select, textarea') : [];
+  var nama    = inputs[0] ? inputs[0].value.trim() : '';
+  var noWa    = inputs[1] ? inputs[1].value.trim() : '';
+  var produk  = inputs[2] ? inputs[2].value.trim() : '';
+  var pesan   = inputs[3] ? inputs[3].value.trim() : '';
+
+  if(!nama){ alert('Nama kamu belum diisi ya!'); if(inputs[0]) inputs[0].focus(); return; }
+  if(!noWa){ alert('Nomor WhatsApp belum diisi!'); if(inputs[1]) inputs[1].focus(); return; }
+
+  var msg = 'Halo Iranza! 👋\n\n';
+  msg += '📋 *Nama:* ' + nama + '\n';
+  msg += '📱 *Nomor WA:* ' + noWa + '\n';
+  if(produk && produk !== 'Pilih produk...') msg += '🛒 *Produk:* ' + produk + '\n';
+  if(pesan) msg += '💬 *Pesan:* ' + pesan + '\n';
+  msg += '\nDikirim dari form kontak hub.iranza.com';
+
+  var url = 'https://wa.me/6285776077292?text=' + encodeURIComponent(msg);
+  window.open(url, '_blank');
+}
 
 // ── SCROLL PROGRESS ──
 var pb = document.getElementById('progress-bar');
 window.addEventListener('scroll',function(){
   var scrolled=window.scrollY,total=document.documentElement.scrollHeight-window.innerHeight;
   if(pb) pb.style.width=Math.min((scrolled/total)*100,100)+'%';
-});
+},{passive:true});
 
 // ── EXIT INTENT POPUP ──
 (function(){
@@ -2519,7 +2623,7 @@ function closeExitPopup(){
 var btt = document.getElementById('back-top');
 window.addEventListener('scroll',function(){
   if(btt) btt.classList.toggle('show',window.scrollY>500);
-});
+},{passive:true});
 if(btt) btt.addEventListener('click',function(e){e.preventDefault();window.scrollTo({top:0,behavior:'smooth'});});
 
 // ── HAMBURGER ──
@@ -2545,9 +2649,10 @@ window.addEventListener('scroll',function(){
     nav.style.boxShadow='';nav.style.borderBottom='';
     nav.style.mixBlendMode='multiply';
   }
-});
+},{passive:true});
 
-// ── HERO PARALLAX ──
+// ── HERO PARALLAX (desktop only — mobile skip for performance) ──
+if(window.matchMedia('(hover: hover) and (min-width: 768px)').matches){
 window.addEventListener('scroll',function(){
   var sy=window.scrollY;if(sy>window.innerHeight)return;
   document.querySelectorAll('.float-obj').forEach(function(o,i){
@@ -2560,7 +2665,8 @@ window.addEventListener('scroll',function(){
   document.querySelectorAll('.cloud').forEach(function(c,i){
     c.style.transform='translateY('+(sy*0.05*(i+1))+'px)';
   });
-});
+},{passive:true});
+}
 
 // ── COUNTER ANIMATION ──
 function animCount(el){
@@ -2908,7 +3014,8 @@ window.showPage = function(page){
     ctx.restore();
   };
 
-  for(var i=0; i<25; i++) particles.push(new Particle());
+  var particleCount = window.innerWidth < 768 ? 15 : 25;
+  for(var i=0; i<particleCount; i++) particles.push(new Particle());
 
   function drawCanvas(){
     if(!ctx) return;
@@ -3013,12 +3120,4 @@ window.showPage = function(page){
     </ul>
 
     <h2>Metode Pembayaran</h2>
-    <p>QRIS, GoPay, OVO, ShopeePay, Dana, Transfer Bank (Virtual Account) via Midtrans.</p>
-
-    <h2>Kontak Iranza Hub</h2>
-    <p>WhatsApp: +62-857-7607-7292 | Website: https://hub.iranza.com/ | Melayani seluruh Indonesia, 24/7.</p>
-  </section>
-</article>
-
-</body>
-</html>
+    <p>QRIS, GoPay, OVO, ShopeeP
