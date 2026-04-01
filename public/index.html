@@ -52,9 +52,7 @@ body{background:var(--cream);color:var(--ink);font-family:'Space Grotesk',sans-s
 
 /* ── NAV ── */
 nav{position:fixed;top:0;left:0;right:0;z-index:500;padding:0 60px;height:72px;display:flex;align-items:center;justify-content:space-between;gap:40px;mix-blend-mode:multiply;transition:background .3s,box-shadow .3s,border .3s,backdrop-filter .3s;}
-/* announcement bar offset for nav */
-body.has-announcement nav{top:42px;}
-@media(max-width:480px){body.has-announcement nav{top:38px;}}
+/* announcement bar removed */
 .nav-logo{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--ink);}
 .nav-logo-icon-box{width:34px;height:34px;border-radius:8px;background:var(--orange);color:#fff;font-family:'Anton',sans-serif;font-size:13px;letter-spacing:1px;display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:2px 2px 0 var(--ink);transition:transform .2s,box-shadow .2s;}
 .nav-logo:hover .nav-logo-icon-box{transform:translate(-2px,-2px);box-shadow:4px 4px 0 var(--ink);}
@@ -553,59 +551,16 @@ body{overflow-x:hidden;}
 }
 
 /* ═══════════════════════════════
-   NEW FEATURES — KEREN UPGRADES
+   NEW FEATURES — KONVERSI TINGGI
 ═══════════════════════════════ */
 
-/* STICKY CTA BANNER - bottom bar mobile */
-.sticky-cta-bar{
-  display:none;
-  position:fixed;bottom:0;left:0;right:0;z-index:450;
-  background:var(--orange);
-  padding:12px 20px;
-  align-items:center;justify-content:space-between;gap:12px;
-  border-top:2.5px solid var(--ink);
-  box-shadow:0 -4px 20px rgba(255,91,30,.4);
-}
-@media(max-width:768px){
-  .sticky-cta-bar{display:flex;}
-  #back-top{bottom:130px;}
-  .wa-float{bottom:80px;}
-}
-.sticky-cta-text{font-family:'Anton',sans-serif;font-size:15px;color:#fff;letter-spacing:.5px;text-transform:uppercase;line-height:1.2;}
-.sticky-cta-text small{font-family:'Space Grotesk',sans-serif;font-size:11px;font-weight:600;color:rgba(255,255,255,.8);display:block;text-transform:none;letter-spacing:0;}
-.sticky-cta-btn{background:#fff;color:var(--orange);padding:10px 22px;border-radius:100px;font-size:14px;font-weight:800;white-space:nowrap;border:none;cursor:pointer;flex-shrink:0;transition:all .2s;}
-.sticky-cta-btn:hover{background:var(--gold);color:var(--ink);}
+/* EXIT INTENT POPUP */
+#exit-popup.open{display:flex!important;}
+#exit-popup.open #exit-popup-box{transform:scale(1);}
+@keyframes slideInLeft{from{opacity:0;transform:translateX(-20px);}to{opacity:1;transform:translateX(0);}}
 
-/* ANNOUNCEMENT BAR - top */
-.announcement-bar{
-  background:var(--ink);
-  padding:10px 20px;
-  text-align:center;
-  font-family:'Space Mono',monospace;
-  font-size:12px;
-  color:rgba(255,255,255,.8);
-  letter-spacing:1.5px;
-  border-bottom:2px solid var(--orange);
-  position:relative;
-  z-index:501;
-  overflow:hidden;
-}
-.announcement-bar strong{color:var(--gold);}
-.announcement-bar-inner{display:inline-flex;align-items:center;gap:20px;}
-@media(max-width:480px){.announcement-bar{font-size:10px;letter-spacing:.5px;padding:8px 16px;}}
-
-/* FLOATING WHATSAPP enhancement */
-.wa-float-pulse{
-  position:fixed;bottom:28px;right:28px;z-index:399;
-  width:56px;height:56px;border-radius:50%;
-  background:rgba(37,211,102,.3);
-  animation:wa-pulse 2s ease-out infinite;
-}
-@keyframes wa-pulse{
-  0%{transform:scale(1);opacity:.8;}
-  100%{transform:scale(2);opacity:0;}
-}
-@media(max-width:768px){.wa-float-pulse{bottom:80px;}.wa-float{bottom:80px;}}
+/* SOCIAL PROOF TOAST */
+#sp-toast.show{display:flex!important;}
 
 /* BADGE NEW on nav riwayat */
 .nav-badge{
@@ -961,13 +916,6 @@ body{overflow-x:hidden;}
     </div>
   </div>
 </div>
-<!-- ANNOUNCEMENT BAR -->
-<div class="announcement-bar" id="announcement-bar">
-  <div class="announcement-bar-inner">
-    🎉 <strong>PROMO APRIL:</strong> Website UMKM + FREE Landing Page — hanya <strong>Rp 999k</strong> &nbsp;·&nbsp; <a href="#" onclick="showPage('produk');return false;" style="color:var(--gold);font-weight:800;text-decoration:underline;">Pesan Sekarang →</a>
-  </div>
-</div>
-
 <!-- PAGE TRANSITION WIPE -->
 <div id="page-wipe">
   <div class="wipe-bar"></div>
@@ -2157,22 +2105,70 @@ window.addEventListener('scroll',function(){
   if(pb) pb.style.width=Math.min((scrolled/total)*100,100)+'%';
 });
 
-// ── ANNOUNCEMENT BAR ──
+// ── EXIT INTENT POPUP ──
 (function(){
-  var bar = document.getElementById('announcement-bar');
-  if(!bar) return;
-  // Check if dismissed this session
-  if(sessionStorage.getItem('ann-dismissed')){
-    bar.style.display='none';
-  } else {
-    document.body.classList.add('has-announcement');
+  var shown = false;
+  var dismissed = sessionStorage.getItem('exit-dismissed');
+  if(dismissed) return;
+
+  function showExitPopup(){
+    if(shown) return;
+    shown = true;
+    var popup = document.getElementById('exit-popup');
+    if(popup){ popup.style.display='flex'; setTimeout(function(){ popup.classList.add('open'); }, 10); }
   }
-  // Allow clicking outside promo link to dismiss
-  bar.addEventListener('dblclick',function(){
-    bar.style.display='none';
-    sessionStorage.setItem('ann-dismissed','1');
-    document.body.classList.remove('has-announcement');
+
+  // Desktop: mouse leaves window from top
+  document.addEventListener('mouseleave', function(e){
+    if(e.clientY < 10) showExitPopup();
   });
+
+  // Mobile: after 45 seconds if still on page
+  var mobileTimer = setTimeout(function(){
+    if(!shown && window.innerWidth < 768) showExitPopup();
+  }, 45000);
+})();
+
+function closeExitPopup(){
+  var popup = document.getElementById('exit-popup');
+  if(popup){ popup.classList.remove('open'); setTimeout(function(){ popup.style.display='none'; }, 350); }
+  sessionStorage.setItem('exit-dismissed','1');
+}
+
+// ── SOCIAL PROOF TOAST ──
+(function(){
+  var buyers = [
+    {name:'Sari W.', msg:'Beli Website UMKM F&B', bg:'#FF5B1E', init:'S'},
+    {name:'Budi R.', msg:'Pesan Kasir POS — 2 user', bg:'#00A896', init:'B'},
+    {name:'Mira D.', msg:'Beli Template Distributor', bg:'#6B3FA0', init:'M'},
+    {name:'Andi K.', msg:'Beli Website + Landing Page', bg:'#E84F6B', init:'A'},
+    {name:'Tina S.', msg:'Konsultasi → langsung order', bg:'#F2B705', init:'T'},
+    {name:'Rizky F.', msg:'Pesan Website UMKM Fashion', bg:'#8CC63F', init:'R'},
+    {name:'Dewi L.', msg:'Beli Kasir POS Offline', bg:'#FF5B1E', init:'D'},
+    {name:'Hendra M.', msg:'Template Distributor 3-in-1', bg:'#00A896', init:'H'},
+  ];
+  var idx = 0;
+  var toast = document.getElementById('sp-toast');
+  var toastAv = document.getElementById('sp-toast-av');
+  var toastName = document.getElementById('sp-toast-name');
+  var toastMsg = document.getElementById('sp-toast-msg');
+  if(!toast) return;
+
+  function showToast(){
+    var b = buyers[idx % buyers.length]; idx++;
+    toastAv.style.background = b.bg;
+    toastAv.textContent = b.init;
+    toastName.textContent = b.name;
+    toastMsg.textContent = b.msg;
+    toast.classList.add('show');
+    setTimeout(function(){ toast.classList.remove('show'); setTimeout(function(){ toast.style.display='none'; }, 400); }, 4000);
+  }
+
+  // First toast after 8s, then every 18s
+  setTimeout(function(){
+    showToast();
+    setInterval(showToast, 18000);
+  }, 8000);
 })();
 
 // ── BACK TO TOP ──
@@ -2609,16 +2605,29 @@ window.showPage = function(page){
 })();
 
 </script>
-<!-- WA Float Pulse Effect -->
-<div class="wa-float-pulse"></div>
-
-<!-- STICKY MOBILE CTA BAR -->
-<div class="sticky-cta-bar" id="sticky-cta">
-  <div class="sticky-cta-text">
-    Website UMKM
-    <small>⚡ Siap pakai · Free setup · Support 24/7</small>
+<!-- ── EXIT INTENT POPUP ── -->
+<div id="exit-popup" style="display:none;position:fixed;inset:0;z-index:8500;background:rgba(26,20,8,.75);backdrop-filter:blur(6px);align-items:center;justify-content:center;padding:20px;">
+  <div id="exit-popup-box" style="background:var(--cream);max-width:460px;width:100%;border:3px solid var(--ink);border-radius:6px;padding:40px 36px;position:relative;transform:scale(.88);transition:transform .35s cubic-bezier(.22,1,.36,1);text-align:center;">
+    <button onclick="closeExitPopup()" style="position:absolute;top:14px;right:14px;width:32px;height:32px;border-radius:50%;background:var(--ink);color:#fff;border:none;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;">✕</button>
+    <div style="font-size:48px;margin-bottom:12px;">👋</div>
+    <div style="font-family:'Space Mono',monospace;font-size:10px;color:var(--orange);letter-spacing:3px;text-transform:uppercase;margin-bottom:10px;">Tunggu dulu!</div>
+    <h3 style="font-family:'Anton',sans-serif;font-size:clamp(28px,6vw,40px);text-transform:uppercase;letter-spacing:-1px;line-height:1;margin-bottom:12px;">KONSULTASI<br><em style="font-family:'DM Serif Display',serif;font-style:italic;color:var(--orange);text-transform:none;">Gratis dulu yuk!</em></h3>
+    <p style="font-size:14px;color:rgba(26,20,8,.55);line-height:1.7;margin-bottom:28px;">Belum yakin? Ceritain kebutuhan bisnis kamu ke kami — <strong>gratis, tanpa pressure</strong>. Tim kami siap bantu pilihkan solusi yang paling cocok.</p>
+    <a href="https://wa.me/6285776077292?text=Halo+iranza!+Saya+mau+konsultasi+gratis+dulu." target="_blank" style="display:flex;align-items:center;justify-content:center;gap:10px;background:#25D366;color:#fff;padding:14px 28px;border-radius:100px;font-size:15px;font-weight:800;text-decoration:none;margin-bottom:12px;transition:all .25s;" onmouseenter="this.style.transform='translateY(-2px)';this.style.boxShadow='0 10px 28px rgba(37,211,102,.45)'" onmouseleave="this.style.transform='';this.style.boxShadow=''">
+      💬 Chat WhatsApp — Gratis!
+    </a>
+    <button onclick="closeExitPopup()" style="font-size:12px;color:rgba(26,20,8,.35);background:none;border:none;cursor:pointer;text-decoration:underline;">Tidak, saya lanjut lihat-lihat dulu</button>
   </div>
-  <button class="sticky-cta-btn open-modal" data-product="general" data-name="Website UMKM" data-price="Rp 999k">Pesan — Rp 999k</button>
+</div>
+
+<!-- ── SOCIAL PROOF TOAST ── -->
+<div id="sp-toast" style="position:fixed;bottom:100px;left:24px;z-index:900;max-width:280px;background:#fff;border:2.5px solid var(--ink);border-radius:10px;padding:14px 16px;box-shadow:4px 4px 0 var(--ink);display:none;align-items:center;gap:12px;animation:slideInLeft .4s cubic-bezier(.22,1,.36,1);">
+  <div id="sp-toast-av" style="width:40px;height:40px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-family:'Anton',sans-serif;font-size:16px;color:#fff;"></div>
+  <div>
+    <div id="sp-toast-name" style="font-size:13px;font-weight:800;color:var(--ink);"></div>
+    <div id="sp-toast-msg" style="font-size:11px;color:rgba(26,20,8,.55);line-height:1.4;margin-top:2px;"></div>
+    <div style="font-size:10px;color:var(--orange);font-weight:700;margin-top:4px;">✓ Baru saja</div>
+  </div>
 </div>
 
 </body>
