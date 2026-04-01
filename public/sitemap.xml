@@ -1,24 +1,53 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
-        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9
-        http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
+<urlset
+  xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+  xmlns:xhtml="http://www.w3.org/1999/xhtml"
+  xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
+
+  <!-- Beranda / Homepage -->
   <url>
     <loc>https://hub.iranza.com/</loc>
-    <lastmod>2025-03-25</lastmod>
+    <lastmod>2026-04-01</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
+    <xhtml:link rel="alternate" hreflang="id" href="https://hub.iranza.com/"/>
+    <image:image>
+      <image:loc>https://res.cloudinary.com/dyhvx9wit/image/upload/q_auto,f_auto,w_1200,h_630/iranza_vlnnlu.png</image:loc>
+      <image:title>Iranza Hub — Jasa Website UMKM &amp; Kasir POS Indonesia</image:title>
+      <image:caption>Platform digital untuk UMKM Indonesia: website toko online, kasir POS offline, template siap pakai</image:caption>
+    </image:image>
   </url>
+
+  <!-- Halaman Produk -->
   <url>
     <loc>https://hub.iranza.com/#produk</loc>
-    <lastmod>2025-03-25</lastmod>
+    <lastmod>2026-04-01</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.9</priority>
+    <priority>0.95</priority>
   </url>
+
+  <!-- Halaman Harga -->
   <url>
     <loc>https://hub.iranza.com/#harga</loc>
-    <lastmod>2025-03-25</lastmod>
+    <lastmod>2026-04-01</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.90</priority>
   </url>
+
+  <!-- Halaman Tentang -->
+  <url>
+    <loc>https://hub.iranza.com/#tentang</loc>
+    <lastmod>2026-04-01</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.75</priority>
+  </url>
+
+  <!-- Halaman Kontak -->
+  <url>
+    <loc>https://hub.iranza.com/#kontak</loc>
+    <lastmod>2026-04-01</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.80</priority>
+  </url>
+
 </urlset>
