@@ -1,5 +1,5 @@
-# IANZYA Hub — robots.txt
-# https://hub.ianzya.com/
+# IRANZA Hub — robots.txt
+# https://hub.iranza.com/
 
 User-agent: *
 Allow: /
@@ -7,7 +7,7 @@ Disallow: /api/
 Disallow: /success.html
 
 # Sitemap
-Sitemap: https://hub.ianzya.com/sitemap.xml
+Sitemap: https://hub.iranza.com/sitemap.xml
 
 # Allow AI crawlers
 User-agent: GPTBot
