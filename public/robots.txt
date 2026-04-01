@@ -1,26 +1,84 @@
-# IRANZA Hub — robots.txt
-# https://hub.iranza.com/
+# robots.txt — Iranza Hub (https://hub.iranza.com/)
+# Generated: 2025-04-01
 
-User-agent: *
+# ── Allow all major search engines ──
+User-agent: Googlebot
 Allow: /
-Disallow: /api/
-Disallow: /success.html
 
-# Sitemap
-Sitemap: https://hub.iranza.com/sitemap.xml
+User-agent: Googlebot-Image
+Allow: /
 
-# Allow AI crawlers
+User-agent: Bingbot
+Allow: /
+
+User-agent: Slurp
+Allow: /
+
+User-agent: DuckDuckBot
+Allow: /
+
+User-agent: Baiduspider
+Allow: /
+
+# ── Allow AI crawlers (ChatGPT, Perplexity, Gemini, Claude) ──
 User-agent: GPTBot
 Allow: /
 
-User-agent: ClaudeBot
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: OAI-SearchBot
 Allow: /
 
 User-agent: PerplexityBot
 Allow: /
 
-User-agent: CCBot
-Allow: /
-
 User-agent: Google-Extended
 Allow: /
+
+User-agent: anthropic-ai
+Allow: /
+
+User-agent: Claude-Web
+Allow: /
+
+User-agent: Amazonbot
+Allow: /
+
+User-agent: FacebookExternalHit
+Allow: /
+
+User-agent: Twitterbot
+Allow: /
+
+User-agent: LinkedInBot
+Allow: /
+
+# ── Block bad bots & scrapers ──
+User-agent: AhrefsBot
+Disallow: /
+
+User-agent: SemrushBot
+Disallow: /
+
+User-agent: MJ12bot
+Disallow: /
+
+User-agent: DotBot
+Disallow: /
+
+User-agent: BLEXBot
+Disallow: /
+
+# ── Block internal/private paths ──
+User-agent: *
+Disallow: /api/
+Disallow: /cdn-cgi/
+Disallow: /*.json$
+Allow: /
+
+# ── Sitemap ──
+Sitemap: https://hub.iranza.com/sitemap.xml
+
+# ── Crawl delay for courtesy ──
+Crawl-delay: 1
