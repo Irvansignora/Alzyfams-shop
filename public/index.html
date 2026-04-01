@@ -14,9 +14,9 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Iranza Hub</title>
-<!-- Midtrans Snap.js — dimuat dinamis dari /api/config agar client key sudah siap sebelum snap.pay() -->
+<!-- Midtrans Snap.js — dimuat setelah halaman load agar tidak blocking render -->
 <script>
-(function(){
+window.addEventListener('load', function(){
   fetch('/api/config')
     .then(function(r){ return r.json(); })
     .then(function(cfg){
@@ -28,7 +28,7 @@
       document.head.appendChild(s);
     })
     .catch(function(e){ console.error('Gagal load Midtrans config:', e); });
-})();
+});
 </script>
 <!-- ═══════════════════════════════════════════
      SEO — TITLE & META CORE
@@ -331,15 +331,15 @@
 <!-- ═══════════════════════════════════════════
      PERFORMANCE & TECHNICAL SEO
 ═══════════════════════════════════════════ -->
-<link rel="preconnect" href="https://res.cloudinary.com">
+<link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="dns-prefetch" href="https://res.cloudinary.com">
-<link rel="dns-prefetch" href="https://fonts.googleapis.com">
-<link rel="dns-prefetch" href="https://fonts.gstatic.com">
+<link rel="preconnect" href="https://res.cloudinary.com">
 <meta name="format-detection" content="telephone=no">
 <meta http-equiv="x-ua-compatible" content="ie=edge">
-<link rel="icon" type="image/svg+xml" href="https://res.cloudinary.com/dyhvx9wit/image/upload/v1774436218/iranza_favicon_kv1hdb.png">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Anton&family=DM+Serif+Display:ital@0;1&family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link rel="icon" type="image/png" href="https://res.cloudinary.com/dyhvx9wit/image/upload/v1774436218/iranza_favicon_kv1hdb.png">
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=DM+Serif+Display:ital@0;1&family=Space+Grotesk:wght@400;500;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+<noscript><link href="https://fonts.googleapis.com/css2?family=Anton&family=DM+Serif+Display:ital@0;1&family=Space+Grotesk:wght@400;500;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet"></noscript>
 <style>
 :root{
   --cream:#F5F0E4;--sky:#C8E6F5;--ink:#1A1408;
@@ -348,6 +348,13 @@
 }
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
 html{scroll-behavior:smooth;}
+@media(prefers-reduced-motion: no-preference){html{scroll-behavior:smooth;}}
+@media(prefers-reduced-motion: reduce){html{scroll-behavior:auto;}}
+/* content-visibility for below-fold sections improves render performance */
+#statement,#why,#payment,#how-to-order,#pricing,#testimonials,#faq,#cta,footer{
+  content-visibility: auto;
+  contain-intrinsic-size: 0 500px;
+}
 body{background:var(--cream);color:var(--ink);font-family:'Space Grotesk',sans-serif;overflow-x:hidden;cursor:none;}
 ::selection{background:var(--gold);color:var(--ink);}
 ::-webkit-scrollbar{width:4px;}
@@ -914,9 +921,25 @@ body{overflow-x:hidden;}
 #toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
 #toast .toast-dot{width:8px;height:8px;border-radius:50%;background:var(--gold);flex-shrink:0;animation:blink 1s ease infinite;}
 
-/* ── SMOOTH PAGE HERO ENTRANCE ── */
-.page-enter .page-hero{animation:heroSlideIn .5s cubic-bezier(.22,1,.36,1) forwards;}
-@keyframes heroSlideIn{from{opacity:0;transform:translateY(16px);}to{opacity:1;transform:translateY(0);}}
+/* PERFORMANCE: Disable cursor on touch/mobile devices */
+@media (hover: none) {
+  .cursor, .cursor-trail { display: none !important; }
+  body { cursor: auto !important; }
+}
+/* PERFORMANCE: Reduce motion for users who prefer it */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+}
+/* PERFORMANCE: Contain paint for heavy sections */
+#testimonials, #pricing, #templates, #why { contain: layout style; }
+/* PERFORMANCE: Use GPU layer for animated elements */
+.marquee-strip .mq { will-change: transform; }
+.float-obj { will-change: transform; }
+/* PERFORMANCE: Reduce marquee count on mobile */
+@media (max-width: 600px) {
+  .mq-item:nth-child(n+5) { display: none; }
+}
+
 
 /* ── FOOTER LINK HOVER ARROW ── */
 .f-col a{display:block;font-size:13px;color:rgba(255,255,255,.5);text-decoration:none;margin-bottom:12px;transition:color .2s,transform .2s,letter-spacing .2s;}
@@ -1212,7 +1235,7 @@ body{overflow-x:hidden;}
   <div class="ls-center">
     <!-- Logo image -->
     <div class="ls-logo-img-wrap">
-      <img src="https://res.cloudinary.com/dyhvx9wit/image/upload/h_70,q_auto,f_auto/iranza_vlnnlu.png" alt="IRANZA">
+      <img src="https://res.cloudinary.com/dyhvx9wit/image/upload/h_70,q_auto,f_auto/iranza_vlnnlu.png" alt="IRANZA" decoding="async" loading="eager">
     </div>
 
     <!-- Spinning rings -->
@@ -1251,6 +1274,8 @@ body{overflow-x:hidden;}
       src="https://res.cloudinary.com/dyhvx9wit/image/upload/h_70,q_auto,f_auto/iranza_vlnnlu.png" 
       alt="IRANZA Logo" 
       class="nav-logo-img"
+      fetchpriority="high"
+      decoding="sync"
     />
   </a>
   <ul class="nav-links">
@@ -1261,7 +1286,6 @@ body{overflow-x:hidden;}
     <li><a href="#" id="nav-kontak" onclick="showPage('kontak');return false;">Kontak</a></li>
     <li><a href="#" id="nav-riwayat" onclick="showPage('riwayat');return false;">🧾 Riwayat</a></li>
   </ul>
-  <button class="nav-cta open-modal" data-product="general" data-name="Produk iranza" data-price="Mulai 50k/User">Pesan Sekarang</button>
   <button class="nav-hamburger" id="hamburger" aria-label="Menu">
     <span></span><span></span><span></span>
   </button>
@@ -1491,6 +1515,8 @@ body{overflow-x:hidden;}
             <img 
               src="https://res.cloudinary.com/dyhvx9wit/image/upload/h_65,q_auto,f_auto/iranza_vlnnlu.png" 
               alt="IRANZA Logo"
+              loading="lazy"
+              decoding="async"
             />
           </div>
           <p class="f-tagline">Solusi digital untuk semua UMKM — website siap pakai, kasir POS, jasa website custom, dan free landing page.</p>
@@ -2882,7 +2908,7 @@ window.showPage = function(page){
     ctx.restore();
   };
 
-  for(var i=0; i<80; i++) particles.push(new Particle());
+  for(var i=0; i<25; i++) particles.push(new Particle());
 
   function drawCanvas(){
     if(!ctx) return;
@@ -2915,10 +2941,10 @@ window.showPage = function(page){
   }
 
   if(document.readyState === 'complete'){
-    setTimeout(hideLs, 2000);
+    setTimeout(hideLs, 300);
   } else {
-    window.addEventListener('load', function(){ setTimeout(hideLs, 2000); });
-    setTimeout(hideLs, 3500);
+    window.addEventListener('load', function(){ setTimeout(hideLs, 300); });
+    setTimeout(hideLs, 1200);
   }
 })();
 
