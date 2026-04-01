@@ -19,7 +19,7 @@
     .catch(function(e){ console.error('Gagal load Midtrans config:', e); });
 })();
 </script>
-<title>iranza Shop — Produk Digital Premium untuk Bisnis Kamu</title>
+<title>iranza Hub — Produk Digital Premium untuk Bisnis Kamu</title>
 <meta name="description" content="Produk digital premium: Template Website, Kasir POS, SaaS, dan lebih. Siap pakai, bayar sekali, langsung jalan!">
 <meta name="theme-color" content="#FF5B1E">
 <link rel="icon" type="image/svg+xml" href="https://res.cloudinary.com/dyhvx9wit/image/upload/v1774436218/iranza_favicon_kv1hdb.png">
@@ -52,6 +52,9 @@ body{background:var(--cream);color:var(--ink);font-family:'Space Grotesk',sans-s
 
 /* ── NAV ── */
 nav{position:fixed;top:0;left:0;right:0;z-index:500;padding:0 60px;height:72px;display:flex;align-items:center;justify-content:space-between;gap:40px;mix-blend-mode:multiply;transition:background .3s,box-shadow .3s,border .3s,backdrop-filter .3s;}
+/* announcement bar offset for nav */
+body.has-announcement nav{top:42px;}
+@media(max-width:480px){body.has-announcement nav{top:38px;}}
 .nav-logo{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--ink);}
 .nav-logo-icon-box{width:34px;height:34px;border-radius:8px;background:var(--orange);color:#fff;font-family:'Anton',sans-serif;font-size:13px;letter-spacing:1px;display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:2px 2px 0 var(--ink);transition:transform .2s,box-shadow .2s;}
 .nav-logo:hover .nav-logo-icon-box{transform:translate(-2px,-2px);box-shadow:4px 4px 0 var(--ink);}
@@ -379,6 +382,246 @@ footer{background:var(--ink);padding:0;}
 .f-div{height:1px;background:rgba(255,255,255,.08);margin-bottom:28px;}
 .f-copy{font-size:11px;color:rgba(255,255,255,.2);letter-spacing:2px;text-transform:uppercase;}
 @media(max-width:800px){.footer-top{grid-template-columns:1fr;gap:40px;}.f-links{grid-template-columns:repeat(2,1fr);}.footer-inner{padding:48px 24px 28px;}}
+
+/* ═══════════════════════════════════════
+   MOBILE RESPONSIVE FIXES - COMPREHENSIVE
+═══════════════════════════════════════ */
+
+/* HERO mobile fix */
+@media(max-width:600px){
+  #hero{padding-top:72px;min-height:100svh;}
+  .hero-inner{padding:0 20px;}
+  .hero-h1{font-size:clamp(56px,18vw,90px);}
+  .hero-h1 .line2{font-size:clamp(48px,15vw,80px);}
+  .hero-sub{font-size:15px;margin:20px auto 32px;}
+  .hero-btns{flex-direction:column;align-items:center;gap:12px;}
+  .hero-btns .btn-big{width:100%;max-width:320px;justify-content:center;padding:16px 28px;font-size:15px;}
+  /* Hide big floating objects on mobile */
+  .obj-coffee{font-size:60px;top:8%;right:2%;opacity:.6;}
+  .obj-box{font-size:50px;top:12%;left:1%;opacity:.6;}
+  .obj-star{font-size:36px;top:auto;bottom:35%;right:2%;}
+  .obj-arrow{display:none;}
+  .obj-diamond{width:36px;height:36px;right:3%;}
+  .obj-circle{width:44px;height:44px;left:1%;}
+  .obj-pill{width:70px;height:28px;left:30%;}
+  .sticker1{width:82px;height:82px;font-size:10px;bottom:32%;right:2%;}
+  .sticker2{width:70px;height:70px;font-size:9px;top:18%;left:0%;}
+  .hill1{width:600px;left:-120px;}
+  .hill2{width:450px;}
+  .hill3{width:320px;left:20%;}
+}
+
+/* PROOF STRIP mobile */
+@media(max-width:600px){
+  .proof-strip{padding:16px 20px;gap:16px;flex-direction:column;align-items:flex-start;}
+  .proof-item{font-size:12px;}
+}
+
+/* STATEMENT mobile */
+@media(max-width:600px){
+  #statement{padding:72px 24px;}
+  .statement-text{font-size:clamp(28px,8vw,44px);letter-spacing:-1px;}
+}
+
+/* MARQUEE mobile - reduce font */
+@media(max-width:600px){
+  .mq-item{font-size:16px;padding:0 20px;}
+}
+
+/* NAV logo image sizing */
+.nav-logo-img{height:36px;width:auto;display:block;}
+@media(max-width:600px){.nav-logo-img{height:28px;}}
+
+/* STATS mobile - already handled but improve */
+@media(max-width:480px){
+  #stats-strip{grid-template-columns:repeat(2,1fr);padding:0;}
+  .stat-block{padding:20px 16px;}
+  .stat-n{font-size:36px;}
+  .stat-l{font-size:9px;}
+}
+
+/* PRODUCT CARDS HOME mobile - inline style overrides */
+@media(max-width:600px){
+  .pch{padding:28px 20px;}
+}
+
+/* PRICING mobile */
+@media(max-width:600px){
+  #pricing{padding:48px 20px;}
+  .pricing-h-top{flex-direction:column;align-items:flex-start;gap:16px;}
+  .pricing-h-title{font-size:clamp(44px,12vw,72px);}
+  .pricing-h-sub{max-width:100%;}
+  .price-col{padding:28px 20px;}
+  .pc-price{font-size:38px;}
+}
+
+/* HOW TO ORDER mobile */
+@media(max-width:480px){
+  .hto-step{padding:32px 20px;}
+  .hto-step-ico{font-size:36px;}
+}
+
+/* TESTIMONIALS mobile */
+@media(max-width:600px){
+  #testimonials{padding:48px 20px;}
+  .testi-card{padding:24px 20px;}
+}
+
+/* FAQ mobile */
+@media(max-width:480px){
+  .faq-q{font-size:14px;}
+  .faq-h-title{font-size:clamp(44px,12vw,72px);}
+}
+
+/* CTA FINALE mobile */
+@media(max-width:480px){
+  #cta{padding:48px 20px;}
+  .cta-title{font-size:clamp(52px,14vw,96px);}
+  .cta-sub{font-size:15px;}
+  .btn-wa-big,.btn-demo-big{padding:16px 28px;font-size:15px;width:100%;justify-content:center;}
+}
+
+/* FOOTER mobile */
+@media(max-width:480px){
+  .footer-inner{padding:40px 20px 24px;}
+  .f-links{grid-template-columns:1fr 1fr;}
+  .f-logo{font-size:28px;}
+}
+
+/* PAGE HERO mobile */
+@media(max-width:480px){
+  .page-hero{padding:100px 20px 48px;}
+  .page-hero-title{font-size:clamp(52px,14vw,100px);}
+}
+
+/* TEMPLATE BLOCKS mobile */
+@media(max-width:600px){
+  .tb-content{padding:32px 20px;}
+  .tb-title{font-size:clamp(36px,10vw,52px);}
+}
+
+/* MODAL mobile */
+@media(max-width:480px){
+  .modal-box{padding:28px 20px;}
+  .modal-title{font-size:24px;}
+}
+
+/* WHY mobile */
+@media(max-width:480px){
+  .why-card{padding:36px 24px;}
+}
+
+/* KONTAK mobile inline style helper */
+@media(max-width:480px){
+  section[style*="padding:100px"]{padding:48px 20px!important;}
+  div[style*="padding:100px"]{padding:48px 20px!important;}
+}
+
+/* KASIR DEMO mobile */
+@media(max-width:480px){
+  .kasir-demo-section{padding:32px 16px;}
+  .kasir-demo-iframe{height:320px;}
+  .kasir-demo-title{font-size:clamp(24px,7vw,36px);}
+}
+
+/* General overflow protection */
+* {max-width:100vw;}
+img,iframe,video{max-width:100%;}
+body{overflow-x:hidden;}
+
+/* FIX: Inline style sections with fixed 60px padding */
+@media(max-width:600px){
+  section[style*="padding:100px 60px"],
+  div[style*="padding:100px 60px"]{
+    padding:48px 20px!important;
+  }
+  section[style*="padding:80px 60px"],
+  div[style*="padding:80px 60px"]{
+    padding:40px 20px!important;
+  }
+}
+
+/* Grid with inline style on home product section */
+@media(max-width:600px){
+  div[style*="grid-template-columns:repeat(4,1fr)"],
+  div[style*="grid-template-columns: repeat(4,1fr)"]{
+    grid-template-columns:1fr!important;
+  }
+  div[style*="grid-template-columns:1fr 1fr"]:not(.f-links){
+    grid-template-columns:1fr!important;
+  }
+}
+
+/* ═══════════════════════════════
+   NEW FEATURES — KEREN UPGRADES
+═══════════════════════════════ */
+
+/* STICKY CTA BANNER - bottom bar mobile */
+.sticky-cta-bar{
+  display:none;
+  position:fixed;bottom:0;left:0;right:0;z-index:450;
+  background:var(--orange);
+  padding:12px 20px;
+  align-items:center;justify-content:space-between;gap:12px;
+  border-top:2.5px solid var(--ink);
+  box-shadow:0 -4px 20px rgba(255,91,30,.4);
+}
+@media(max-width:768px){
+  .sticky-cta-bar{display:flex;}
+  #back-top{bottom:130px;}
+  .wa-float{bottom:80px;}
+}
+.sticky-cta-text{font-family:'Anton',sans-serif;font-size:15px;color:#fff;letter-spacing:.5px;text-transform:uppercase;line-height:1.2;}
+.sticky-cta-text small{font-family:'Space Grotesk',sans-serif;font-size:11px;font-weight:600;color:rgba(255,255,255,.8);display:block;text-transform:none;letter-spacing:0;}
+.sticky-cta-btn{background:#fff;color:var(--orange);padding:10px 22px;border-radius:100px;font-size:14px;font-weight:800;white-space:nowrap;border:none;cursor:pointer;flex-shrink:0;transition:all .2s;}
+.sticky-cta-btn:hover{background:var(--gold);color:var(--ink);}
+
+/* ANNOUNCEMENT BAR - top */
+.announcement-bar{
+  background:var(--ink);
+  padding:10px 20px;
+  text-align:center;
+  font-family:'Space Mono',monospace;
+  font-size:12px;
+  color:rgba(255,255,255,.8);
+  letter-spacing:1.5px;
+  border-bottom:2px solid var(--orange);
+  position:relative;
+  z-index:501;
+  overflow:hidden;
+}
+.announcement-bar strong{color:var(--gold);}
+.announcement-bar-inner{display:inline-flex;align-items:center;gap:20px;}
+@media(max-width:480px){.announcement-bar{font-size:10px;letter-spacing:.5px;padding:8px 16px;}}
+
+/* FLOATING WHATSAPP enhancement */
+.wa-float-pulse{
+  position:fixed;bottom:28px;right:28px;z-index:399;
+  width:56px;height:56px;border-radius:50%;
+  background:rgba(37,211,102,.3);
+  animation:wa-pulse 2s ease-out infinite;
+}
+@keyframes wa-pulse{
+  0%{transform:scale(1);opacity:.8;}
+  100%{transform:scale(2);opacity:0;}
+}
+@media(max-width:768px){.wa-float-pulse{bottom:80px;}.wa-float{bottom:80px;}}
+
+/* BADGE NEW on nav riwayat */
+.nav-badge{
+  display:inline-block;
+  background:var(--rose);color:#fff;
+  font-size:9px;font-weight:800;
+  padding:2px 7px;border-radius:100px;
+  margin-left:4px;vertical-align:middle;
+  letter-spacing:.5px;
+  animation:badge-bounce .8s ease-in-out infinite alternate;
+}
+@keyframes badge-bounce{from{transform:translateY(0)}to{transform:translateY(-3px)}}
+
+/* SCROLL REVEAL improvements */
+.rv{opacity:0;transform:translateY(24px);transition:opacity .65s ease,transform .65s ease;}
+.rv.vis{opacity:1;transform:translateY(0);}
 
 /* ── RIPPLE EFFECT ── */
 .btn-big,.btn-order-now,.nav-cta,.form-submit{overflow:hidden;}
@@ -718,6 +961,13 @@ footer{background:var(--ink);padding:0;}
     </div>
   </div>
 </div>
+<!-- ANNOUNCEMENT BAR -->
+<div class="announcement-bar" id="announcement-bar">
+  <div class="announcement-bar-inner">
+    🎉 <strong>PROMO APRIL:</strong> Website UMKM + FREE Landing Page — hanya <strong>Rp 999k</strong> &nbsp;·&nbsp; <a href="#" onclick="showPage('produk');return false;" style="color:var(--gold);font-weight:800;text-decoration:underline;">Pesan Sekarang →</a>
+  </div>
+</div>
+
 <!-- PAGE TRANSITION WIPE -->
 <div id="page-wipe">
   <div class="wipe-bar"></div>
@@ -1907,6 +2157,24 @@ window.addEventListener('scroll',function(){
   if(pb) pb.style.width=Math.min((scrolled/total)*100,100)+'%';
 });
 
+// ── ANNOUNCEMENT BAR ──
+(function(){
+  var bar = document.getElementById('announcement-bar');
+  if(!bar) return;
+  // Check if dismissed this session
+  if(sessionStorage.getItem('ann-dismissed')){
+    bar.style.display='none';
+  } else {
+    document.body.classList.add('has-announcement');
+  }
+  // Allow clicking outside promo link to dismiss
+  bar.addEventListener('dblclick',function(){
+    bar.style.display='none';
+    sessionStorage.setItem('ann-dismissed','1');
+    document.body.classList.remove('has-announcement');
+  });
+})();
+
 // ── BACK TO TOP ──
 var btt = document.getElementById('back-top');
 window.addEventListener('scroll',function(){
@@ -2001,10 +2269,10 @@ function openModal(product,name,price){
 }
 function closeModal(){document.getElementById('modal').classList.remove('open');document.body.style.overflow='';}
 document.getElementById('modal').addEventListener('click',function(e){if(e.target===this)closeModal();});
-document.querySelectorAll('.open-modal').forEach(function(btn){
-  btn.addEventListener('click',function(){
-    openModal(this.dataset.product,this.dataset.name,this.dataset.price);
-  });
+// Use event delegation so dynamically added .open-modal buttons (sticky bar, etc.) also work
+document.addEventListener('click',function(e){
+  var btn=e.target.closest('.open-modal');
+  if(btn) openModal(btn.dataset.product,btn.dataset.name,btn.dataset.price);
 });
 
 function submitOrder(){
@@ -2341,5 +2609,17 @@ window.showPage = function(page){
 })();
 
 </script>
+<!-- WA Float Pulse Effect -->
+<div class="wa-float-pulse"></div>
+
+<!-- STICKY MOBILE CTA BAR -->
+<div class="sticky-cta-bar" id="sticky-cta">
+  <div class="sticky-cta-text">
+    Website UMKM
+    <small>⚡ Siap pakai · Free setup · Support 24/7</small>
+  </div>
+  <button class="sticky-cta-btn open-modal" data-product="general" data-name="Website UMKM" data-price="Rp 999k">Pesan — Rp 999k</button>
+</div>
+
 </body>
 </html>
